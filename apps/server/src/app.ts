@@ -1,12 +1,12 @@
-import express from 'express';
+import { Server } from './presentation/server';
 import 'dotenv/config';
 
-const app = express();
+async function main() {
+	const server = new Server(Number(process.env.PORT) || 3000);
 
-app.get('/', (req, res) => {
-	res.json({ msg: 'Backend running' });
-});
+	server.start();
+}
 
-app.listen(process.env.PORT, () => {
-	console.log(`Server listening on port ${process.env.PORT}`);
-});
+(() => {
+	main();
+})();
