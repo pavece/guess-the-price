@@ -1,0 +1,20 @@
+import { Request, Response } from 'express';
+import { GuessService } from '../services/guess.service';
+
+export class GuessController {
+	private guessService = new GuessService();
+
+	public guessProductPrice = (req: Request, res: Response) => {
+		const { productId, guessedPrice } = req.query;
+
+		if (!productId || isNaN(Number(guessedPrice))) {
+			res.status(400).json({ error: 'Please specify valid productId and guessedPrice in the query.' });
+			return;
+		}
+
+		this.guessService
+			.guessProductPrice(productId.toString(), Number(guessedPrice))
+			.then(r => res.json(r))
+			.catch(error => res.status(500).json({ error }));
+	};
+}
