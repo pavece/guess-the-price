@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { GuessService } from '../services/guess.service';
+import { ControllerError } from '../../domain/errors/controller-error';
 
 export class GuessController {
 	private guessService = new GuessService();
@@ -15,6 +16,6 @@ export class GuessController {
 		this.guessService
 			.guessProductPrice(productId.toString(), Number(guessedPrice))
 			.then(r => res.json(r))
-			.catch(error => res.status(500).json({ error }));
+			.catch((error: ControllerError) => res.status(error.code).json({ error: error.message }));
 	};
 }

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { ControllerError } from '../../domain/errors/controller-error';
 
 const DIFFERENCE_LIMIT = 40;
 
@@ -10,7 +11,7 @@ export class GuessService {
 			const product = await this.prisma.product.findFirst({ where: { id: productId } });
 
 			if (!product) {
-				throw new Error('Product not found');
+				throw new ControllerError('Product not found', 404);
 			}
 
 			const productPrice = product.price as unknown as number;
@@ -28,7 +29,12 @@ export class GuessService {
 			return { originalPrice: productPrice, guessedPrice, points: Math.ceil(points) };
 		} catch (error) {
 			console.error(error);
-			throw new Error(`Cannot guess the price for product ${productId}`);
+
+			if (error instanceof ControllerError) {
+				throw error;
+			}
+
+			throw new ControllerError(`Cannot guess the price for product ${productId}`, 500);
 		}
 	};
 }
