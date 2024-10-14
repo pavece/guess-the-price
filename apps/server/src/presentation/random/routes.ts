@@ -8,6 +8,7 @@ export class RandomRoutes {
 		const router = Router();
 
 		router.get('/product', this.randomController.getRandomProduct);
+		router.get("/product/highLow", this.randomController.getRandomProductHighLow)
 
 		return router;
 	}
