@@ -15,7 +15,9 @@ export class RandomController {
 		this.randomService
 			.getRandomProduct(ignores)
 			.then(product => res.status(200).json(product))
-			.catch(error => res.status(500).json({ error }));
+			.catch((error: ControllerError) => {
+				res.status(error.code).json({ error: error.message });
+			});
 	};
 
 	public getRandomProductHighLow = (req: Request, res: Response) => {

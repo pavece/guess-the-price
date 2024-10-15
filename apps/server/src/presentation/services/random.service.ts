@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { ControllerError } from '../../domain/errors/controller-error';
+import { checkControllerError } from '../../domain/errors/handle-controller-error';
 
 const MAX_PRICE_DIFF = 1.5;
 
@@ -19,9 +20,8 @@ export class RandomService {
 
 			return randomProduct[0];
 		} catch (error) {
-			console.log(error);
-
-			throw new Error('Cannot get random product');
+			console.error(error);
+			checkControllerError(error as Error, 'Could not get random product');
 		}
 	};
 
@@ -65,12 +65,7 @@ export class RandomService {
 			return products;
 		} catch (error) {
 			console.error(error);
-
-			if (error instanceof ControllerError) {
-				throw error;
-			}
-
-			throw new ControllerError('Could not get random product high low', 500);
+			checkControllerError(error as Error, 'Could not get random product high low');
 		}
 	};
 }

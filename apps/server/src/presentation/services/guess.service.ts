@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { ControllerError } from '../../domain/errors/controller-error';
+import { checkControllerError } from '../../domain/errors/handle-controller-error';
 
 const DIFFERENCE_LIMIT = 40;
 
@@ -29,12 +30,7 @@ export class GuessService {
 			return { originalPrice: productPrice, guessedPrice, points: Math.ceil(points) };
 		} catch (error) {
 			console.error(error);
-
-			if (error instanceof ControllerError) {
-				throw error;
-			}
-
-			throw new ControllerError(`Cannot guess the price for product ${productId}`, 500);
+			checkControllerError(error as Error, `Cannot guess the price for product ${productId}`);
 		}
 	};
 }
