@@ -7,4 +7,5 @@ export const productValidationSchema = z.object({
 	priceMessage: z.string().optional(),
 	description: z.string().min(10).max(500).optional(),
 	source: z.string().optional(),
+	categoryId: z.string().optional(),
 });
