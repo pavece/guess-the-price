@@ -13,7 +13,7 @@ export class RandomController {
 		}
 
 		this.randomService
-			.getRandomProduct(ignores)
+			.getRandomProduct(ignores, req.body.category)
 			.then(product => res.status(200).json(product))
 			.catch((error: ControllerError) => {
 				res.status(error.code).json({ error: error.message });

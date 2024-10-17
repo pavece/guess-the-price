@@ -7,18 +7,43 @@ const MAX_PRICE_DIFF = 1.5;
 export class RandomService {
 	private prisma = new PrismaClient();
 
-	public getRandomProduct = async (ignore: string[]) => {
+	public getRandomProduct = async (ignore: string[], category?: string) => {
 		try {
-			const productCount = await this.prisma.product.count({ where: { id: { notIn: ignore } } });
-
-			const randomProduct = await this.prisma.product.findMany({
-				where: { id: { notIn: ignore } },
-				skip: Math.random() * productCount,
-				take: 1,
-				orderBy: { id: 'desc' },
+			const productCount = await this.prisma.product.count({
+				where: { id: { notIn: ignore }, categoryId: category },
 			});
 
-			return randomProduct[0];
+			if (!productCount) {
+				throw new ControllerError("Couldn't find any product.", 404);
+			}
+
+			const randomProduct = await this.prisma.product.findMany({
+				orderBy: { id: 'desc' },
+				where: { id: { notIn: ignore }, categoryId: category },
+				skip: Math.random() * productCount,
+				take: 1,
+				select: {
+					id: true,
+					name: true,
+					description: true,
+					image: true,
+					source: true,
+					price: true,
+					priceMessage: true,
+					category: {
+						select: {
+							name: true,
+						},
+					},
+				},
+			});
+
+			if (!randomProduct.length) {
+				throw new ControllerError("Couldn't find any product.", 404);
+			}
+
+			const { price, ...rest } = randomProduct[0];
+			return { ...rest, price: Number(price) };
 		} catch (error) {
 			console.error(error);
 			checkControllerError(error as Error, 'Could not get random product');
