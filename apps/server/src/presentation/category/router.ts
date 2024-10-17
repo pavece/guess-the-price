@@ -8,6 +8,7 @@ export class CategoryRouter {
 		const categoryController = new CategoryController();
 
 		router.post('/new', apiKeyValidation, categoryController.createNewCategory);
+		router.get('/', categoryController.getCategories);
 
 		return router;
 	}

@@ -18,4 +18,11 @@ export class CategoryController {
 			.then(category => res.status(201).json({ category }))
 			.catch((error: ControllerError) => res.status(error.code).json({ error: error.message }));
 	};
+
+	public getCategories = (req: Request, res: Response) => {
+		this.categoryService
+			.getCategories()
+			.then(categories => res.status(200).json(categories))
+			.catch((error: ControllerError) => res.status(error.code).json({ error: error.message }));
+	};
 }
