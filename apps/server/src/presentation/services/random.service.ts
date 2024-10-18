@@ -2,10 +2,24 @@ import { PrismaClient } from '@prisma/client';
 import { ControllerError } from '../../domain/errors/controller-error';
 import { checkControllerError } from '../../domain/errors/handle-controller-error';
 
-const MAX_PRICE_DIFF = 1.5;
+const MAX_PRICE_DIFF = 1;
 
 export class RandomService {
 	private prisma = new PrismaClient();
+	private productSelectProperties = {
+		id: true,
+		name: true,
+		description: true,
+		image: true,
+		source: true,
+		price: true,
+		priceMessage: true,
+		category: {
+			select: {
+				name: true,
+			},
+		},
+	};
 
 	public getRandomProduct = async (ignore: string[], category?: string) => {
 		try {
@@ -22,20 +36,7 @@ export class RandomService {
 				where: { id: { notIn: ignore }, categoryId: category },
 				skip: Math.random() * productCount,
 				take: 1,
-				select: {
-					id: true,
-					name: true,
-					description: true,
-					image: true,
-					source: true,
-					price: true,
-					priceMessage: true,
-					category: {
-						select: {
-							name: true,
-						},
-					},
-				},
+				select: this.productSelectProperties,
 			});
 
 			if (!randomProduct.length) {
@@ -55,7 +56,10 @@ export class RandomService {
 			const products = [];
 
 			// First product
-			products[0] = await this.prisma.product.findUnique({ where: { id: currentProductId } });
+			products[0] = await this.prisma.product.findUnique({
+				where: { id: currentProductId },
+				select: this.productSelectProperties,
+			});
 
 			if (!products[0]) {
 				products[0] = await this.getRandomProduct(ignore);
@@ -79,12 +83,14 @@ export class RandomService {
 			}
 
 			products[1] = await this.prisma.product.findFirst({
+				orderBy: { id: 'desc' },
 				where: {
 					id: { notIn: [...ignore, products[0].id] },
 					price: { lte: Number(products[0].price) + MAX_PRICE_DIFF, gte: Number(products[0].price) - MAX_PRICE_DIFF },
 				},
 				skip: Math.random() * limitedProductCount,
-				orderBy: { id: 'desc' },
+
+				select: this.productSelectProperties,
 			});
 
 			return products;
