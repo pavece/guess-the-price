@@ -9,13 +9,17 @@ export const MainLayout = () => {
 			<div className='flex flex-col justify-between min-h-screen'>
 				<div>
 					<Navbar />
-					<main className='px-5 py-3 flex flex-col w-full items-center'>
+					<main className='px-5 py-8 flex flex-col w-full items-center'>
 						<div className='max-w-[1400px] w-full'>
 							<Outlet />
 						</div>
 					</main>
 				</div>
-				<Footer />
+				<div className='w-full flex justify-center p-4'>
+					<div className='max-w-[1400px] w-full'>
+						<Footer />
+					</div>
+				</div>
 			</div>
 		</>
 	);
