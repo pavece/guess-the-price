@@ -1,5 +1,6 @@
 import { GuessCard } from '@/components/classic-mode/guess-card';
 import { ProductCard } from '@/components/classic-mode/product-card';
+import { ResultsCard } from '@/components/classic-mode/results-card';
 
 export const ClassicModePage = () => {
 	return (
@@ -11,6 +12,7 @@ export const ClassicModePage = () => {
 			<div className='mt-6 flex md:flex-row flex-col gap-4 flex-1'>
 				<ProductCard />
 				<GuessCard />
+				{/* <ResultsCard /> */}
 			</div>
 		</div>
 	);
