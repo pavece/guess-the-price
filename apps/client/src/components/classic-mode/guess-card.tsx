@@ -3,12 +3,15 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 
-export const GuessCard = () => {
+interface Props {
+	onGuess: (price: number) => void;
+}
+
+export const GuessCard = ({ onGuess }: Props) => {
 	const [guessedPrice, setGuessedPrice] = useState<string | number>('');
 
 	const guessPrice = (e: FormEvent) => {
 		e.preventDefault();
-		console.log(Number(guessedPrice));
 	};
 
 	return (
@@ -25,7 +28,15 @@ export const GuessCard = () => {
 						value={guessedPrice}
 						onChange={e => setGuessedPrice(e.target.value)}
 					/>
-					<Button className='w-full' type='submit'>
+					<Button
+						className='w-full'
+						type='submit'
+						onClick={() => {
+							if (Number(guessedPrice)) {
+								onGuess(Number(guessedPrice));
+							}
+						}}
+					>
 						Guess
 					</Button>
 				</form>
