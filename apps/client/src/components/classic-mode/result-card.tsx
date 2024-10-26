@@ -1,5 +1,7 @@
+import { SkipForward } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import { Ranking } from '@phosphor-icons/react';
 
 interface Props {
 	points: number;
@@ -33,11 +35,11 @@ export const ResultCard = ({ points, originalPrice, guessedPrice, onContinue, on
 				</div>
 			</CardContent>
 			<CardFooter className='flex flex-row gap-2'>
-				<Button className='w-1/3 bg-red-500 hover:bg-red-600' onClick={onFinish}>
-					End game
+				<Button className='bg-red-500 hover:bg-red-600' onClick={onFinish}>
+					<Ranking size={24} /> End game
 				</Button>
 				<Button className='w-full' onClick={onContinue}>
-					Next product
+					<SkipForward size={24} /> Next product
 				</Button>
 			</CardFooter>
 		</Card>

@@ -2,6 +2,7 @@ import { FormEvent, useState } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
+import { Check } from '@phosphor-icons/react';
 
 interface Props {
 	onGuess: (price: number) => void;
@@ -37,7 +38,7 @@ export const GuessCard = ({ onGuess }: Props) => {
 							}
 						}}
 					>
-						Guess
+						<Check size={24} /> Guess
 					</Button>
 				</form>
 			</CardContent>

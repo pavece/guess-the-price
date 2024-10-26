@@ -1,9 +1,9 @@
-import { GuessCard } from '@/components/classic-mode/guess-card';
-import { ProductCard } from '@/components/classic-mode/product-card';
-import { ResultCard } from '@/components/classic-mode/result-card';
-import { ResultRecord, ResultsCard } from '@/components/classic-mode/results-card';
-import { Product } from '@/interfaces/product.interface';
 import { useEffect, useState } from 'react';
+import { ResultRecord, ResultsCard } from '@/components/classic-mode/results-card';
+import { ResultCard } from '@/components/classic-mode/result-card';
+import { ProductCard } from '@/components/classic-mode/product-card';
+import { Product } from '@/interfaces/product.interface';
+import { GuessCard } from '@/components/classic-mode/guess-card';
 
 const guessPrice = async (productId: string, price: number) => {
 	return fetch(import.meta.env.VITE_API_URL + `/guess/product?guessedPrice=${price}&productId=${productId}`, {
