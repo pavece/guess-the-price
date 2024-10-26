@@ -7,8 +7,8 @@ export class RandomRoutes {
 	public get routes() {
 		const router = Router();
 
-		router.get('/product', this.randomController.getRandomProduct);
-		router.get("/product/highLow", this.randomController.getRandomProductHighLow)
+		router.post('/product', this.randomController.getRandomProduct);
+		router.post('/product/highLow', this.randomController.getRandomProductHighLow);
 
 		return router;
 	}

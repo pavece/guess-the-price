@@ -17,12 +17,20 @@ export const ClassicModePage = () => {
 	const [guessedResults, setGuessedResults] = useState<[number, number, number] | null>(null);
 	const [results, setResults] = useState<ResultRecord[]>([]);
 	const [gameEnded, setGameEnded] = useState(false);
+	const [seenProducts, setSeenProducts] = useState<string[]>([]);
 
 	const fetchProduct = () => {
 		setProduct(null);
-		fetch(import.meta.env.VITE_API_URL + '/random/product')
+		fetch(import.meta.env.VITE_API_URL + '/random/product', {
+			method: 'POST',
+			body: JSON.stringify({ ignores: seenProducts }),
+			headers: { 'Content-type': 'application/json' },
+		})
 			.then(r => r.json())
-			.then(data => setProduct(data));
+			.then(data => {
+				setProduct(data);
+				setSeenProducts(sp => [...sp, data.id]);
+			});
 	};
 
 	useEffect(() => {
