@@ -9,10 +9,10 @@ interface Props {
 
 export const ProductCard = ({ title, image, source, priceInfo }: Props) => {
 	return (
-		<Card className='max-w-fit pt-6'>
+		<Card className='w-full md:w-[60%] pt-6 '>
 			<CardContent className='flex lg:flex-row flex-col gap-4'>
-				<div>
-					<img src={image} alt="Product name's image" className='max-w-[460px] rounded-sm' />
+				<div className='flex items-center justify-center'>
+					<img src={image} alt="Product name's image" className='min-w-[400px] rounded-sm' />
 				</div>
 				<div>
 					<h2 className='text-xl mb-2 font-semibold'>{title}</h2>
