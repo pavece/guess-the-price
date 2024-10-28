@@ -4,6 +4,7 @@ import { ResultCard } from '@/components/classic-mode/result-card';
 import { ProductCard } from '@/components/classic-mode/product-card';
 import { Product } from '@/interfaces/product.interface';
 import { GuessCard } from '@/components/classic-mode/guess-card';
+import { Loading } from '@/components/ui/loading';
 
 const guessPrice = async (productId: string, price: number) => {
 	return fetch(import.meta.env.VITE_API_URL + `/guess/product?guessedPrice=${price}&productId=${productId}`, {
@@ -64,7 +65,9 @@ export const ClassicModePage = () => {
 				<p className='text-zinc-800'>Get a random product and guess the price.</p>
 			</div>
 			{!product ? (
-				<h1>Loading</h1>
+				<div className='mt-6'>
+					<Loading />
+				</div>
 			) : (
 				<div className='mt-6 flex md:flex-row flex-col gap-4 flex-1'>
 					<ProductCard

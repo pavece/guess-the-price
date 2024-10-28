@@ -13,3 +13,13 @@ body {
 		--radius: 0.5rem;
 	}
 }
+
+.loading {
+	animation: spinner 1s linear infinite;
+}
+
+@keyframes spinner {
+	to {
+		transform: rotate(360deg);
+	}
+}
