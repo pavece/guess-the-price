@@ -8,13 +8,14 @@ interface Props {
 	priceMessage: string;
 	image: string;
 	price?: number;
+	onSelect: () => void;
 }
 
-export const ProductCard = ({ title, source, priceMessage, price, image }: Props) => {
+export const ProductCard = ({ title, source, priceMessage, price, image, onSelect }: Props) => {
 	return (
 		<Card className='w-full pt-6'>
 			<CardContent className='w-full flex flex-row gap-4'>
-				<div className='min-w-[50%] h-[300px] overflow-hidden relative'>
+				<div className='w-[50%] lg:min-w-[250px] min-w-[180px] lg:h-[300px] md:h-[250px] h-[200px] overflow-hidden relative '>
 					<img src={image} alt={`${title}'s image`} className='object-cover absolute' />
 				</div>
 				<div className='[&>p]:mb-2 [&>p]:text-sm  [&>h3]:font-medium'>
@@ -32,7 +33,7 @@ export const ProductCard = ({ title, source, priceMessage, price, image }: Props
 				</div>
 			</CardContent>
 			<CardFooter>
-				<Button className='w-full'>
+				<Button className='w-full' onClick={onSelect}>
 					<Check size={24} /> Select this one
 				</Button>
 			</CardFooter>
