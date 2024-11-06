@@ -93,7 +93,17 @@ export class RandomService {
 				select: this.productSelectProperties,
 			});
 
-			return products;
+			if (!products[1]) {
+				throw new ControllerError('Could not find any product', 404);
+			}
+
+			const { price: selectedProductPrice, ...selectedProductRest } = products[0];
+			const { price: newProductPrice, ...newProductRest } = products[1];
+
+			return {
+				selectedProduct: { price: Number(selectedProductPrice), ...selectedProductRest },
+				newProduct: { price: Number(newProductPrice), ...newProductRest },
+			};
 		} catch (error) {
 			console.error(error);
 			checkControllerError(error as Error, 'Could not get random product high low');
