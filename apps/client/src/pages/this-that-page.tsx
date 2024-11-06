@@ -1,4 +1,5 @@
 import { ProductCard } from '@/components/this-that/product-card';
+import { ResultsCard } from '@/components/this-that/results-card';
 import { Loading } from '@/components/ui/loading';
 import { Product } from '@/interfaces/product.interface';
 import { useEffect, useState } from 'react';
@@ -14,12 +15,29 @@ const getProducts = async (current?: string) => {
 export const ThisOrThatPage = () => {
 	const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 	const [products, setProducts] = useState<{ selectedProduct: Product; newProduct: Product } | null>(null);
+	const [playing, setPlaying] = useState(true);
+	const [guesses, setGuesses] = useState(0);
 
 	useEffect(() => {
+		setProducts(null);
+		setSelectedProduct(null);
+
 		getProducts().then(data => {
 			setProducts(data);
 		});
 	}, []);
+
+	const restartGame = () => {
+		setProducts(null);
+		setSelectedProduct(null);
+
+		setPlaying(true);
+		setGuesses(0);
+
+		getProducts().then(data => {
+			setProducts(data);
+		});
+	};
 
 	const selectProduct = async (selected: Product) => {
 		setSelectedProduct(selected);
@@ -29,12 +47,30 @@ export const ThisOrThatPage = () => {
 
 		if (selected.price > nonSelected!.price) {
 			setProducts(await getProducts(selected.id));
+			setGuesses(g => g + 1);
 		} else {
 			console.log('Loose');
 			setProducts(null);
 			setSelectedProduct(null);
+			setPlaying(false);
 		}
 	};
+
+	if (!playing) {
+		return (
+			<>
+				<div>
+					<div className='mb-10'>
+						<h1 className='font-semibold text-3xl'>This or that mode</h1>
+						<p className='text-zinc-800'>Get two products and guess which one is more expensive.</p>
+					</div>
+					<div className='w-full flex items-center justify-center'>
+						<ResultsCard guesses={guesses} onContinue={restartGame} />
+					</div>
+				</div>
+			</>
+		);
+	}
 
 	return (
 		<div>
@@ -42,7 +78,8 @@ export const ThisOrThatPage = () => {
 				<h1 className='font-semibold text-3xl'>This or that mode</h1>
 				<p className='text-zinc-800'>Get two products and guess which one is more expensive.</p>
 			</div>
-			{!products?.selectedProduct ? (
+
+			{!products ? (
 				<Loading />
 			) : (
 				<div className='flex flex-row gap-4 items-center'>
