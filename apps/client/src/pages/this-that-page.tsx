@@ -13,14 +13,13 @@ const getProducts = async (current?: string) => {
 };
 
 export const ThisOrThatPage = () => {
-	const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 	const [products, setProducts] = useState<{ selectedProduct: Product; newProduct: Product } | null>(null);
 	const [playing, setPlaying] = useState(true);
 	const [guesses, setGuesses] = useState(0);
+	const [showingResult, setShowingResult] = useState(false);
 
 	useEffect(() => {
 		setProducts(null);
-		setSelectedProduct(null);
 
 		getProducts().then(data => {
 			setProducts(data);
@@ -29,10 +28,10 @@ export const ThisOrThatPage = () => {
 
 	const restartGame = () => {
 		setProducts(null);
-		setSelectedProduct(null);
 
 		setPlaying(true);
 		setGuesses(0);
+		setShowingResult(false);
 
 		getProducts().then(data => {
 			setProducts(data);
@@ -40,19 +39,27 @@ export const ThisOrThatPage = () => {
 	};
 
 	const selectProduct = async (selected: Product) => {
-		setSelectedProduct(selected);
+		if (showingResult) return;
 
+		setShowingResult(true);
+		
 		//NOTE: Selected product from API response has nothing to do with newly selected product in client
 		const nonSelected = products?.selectedProduct === selected ? products.newProduct : products?.selectedProduct;
 
-		if (selected.price > nonSelected!.price) {
-			setProducts(await getProducts(selected.id));
-			setGuesses(g => g + 1);
+		if (selected.price >= nonSelected!.price) {
+			const newProducts = await getProducts(selected.id);
+
+			setTimeout(() => {
+				setProducts(newProducts);
+				setGuesses(g => g + 1);
+				setShowingResult(false);
+			}, 1500);
 		} else {
-			console.log('Loose');
-			setProducts(null);
-			setSelectedProduct(null);
-			setPlaying(false);
+			setTimeout(() => {
+				setProducts(null);
+				setPlaying(false);
+				setShowingResult(false);
+			}, 1500);
 		}
 	};
 
@@ -84,7 +91,7 @@ export const ThisOrThatPage = () => {
 			) : (
 				<div className='flex flex-row gap-4 items-center'>
 					<ProductCard
-						selectedId={selectedProduct?.id ?? ''}
+						showingResult={true}
 						product={products.selectedProduct}
 						onSelect={() => {
 							selectProduct(products.selectedProduct);
@@ -94,8 +101,9 @@ export const ThisOrThatPage = () => {
 						<h2 className='text-2xl font-semibold'>VS</h2>
 					</div>
 					<ProductCard
-						selectedId={selectedProduct?.id ?? ''}
+						showingResult={showingResult}
 						product={products.newProduct}
+						animate
 						onSelect={() => {
 							selectProduct(products.newProduct);
 						}}

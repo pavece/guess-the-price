@@ -1,17 +1,20 @@
-import { Check } from '@phosphor-icons/react';
+import { CaretDoubleUp } from '@phosphor-icons/react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardFooter } from '../ui/card';
 import { Product } from '@/interfaces/product.interface';
+import CountUp from 'react-countup';
 
 interface Props {
 	product: Product;
-	selectedId: string;
+	showingResult: boolean;
+	animate?: boolean;
 	onSelect: () => void;
 }
 
 export const ProductCard = ({
-	product: { name, source, priceMessage, price, image, id },
-	selectedId,
+	product: { name, source, priceMessage, price, image },
+	showingResult,
+	animate = false,
 	onSelect,
 }: Props) => {
 	return (
@@ -30,17 +33,19 @@ export const ProductCard = ({
 					<h3>Price message</h3>
 					<p>{priceMessage}</p>
 
-					{selectedId === id && (
+					{showingResult && (
 						<>
 							<h3>Price</h3>
-							<h2 className='text-3xl font-bold'>{price} $</h2>
+							<h2 className='text-3xl font-bold'>
+								<CountUp end={price} decimal=',' decimals={2} duration={animate ? 0.5 : 0.01} />$
+							</h2>
 						</>
 					)}
 				</div>
 			</CardContent>
 			<CardFooter>
 				<Button className='w-full' onClick={onSelect}>
-					<Check size={24} /> Select this one
+					<CaretDoubleUp size={24} /> Select this one
 				</Button>
 			</CardFooter>
 		</Card>

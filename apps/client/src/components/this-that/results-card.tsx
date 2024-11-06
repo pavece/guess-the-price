@@ -1,8 +1,9 @@
-import { HouseSimple } from '@phosphor-icons/react';
+import { HouseSimple, Joystick } from '@phosphor-icons/react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardFooter, CardTitle } from '../ui/card';
 import { Link } from 'react-router-dom';
-import { Joystick } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import Fireworks from 'react-canvas-confetti/dist/presets/fireworks';
 
 interface Props {
 	guesses: number;
@@ -10,28 +11,40 @@ interface Props {
 }
 
 export const ResultsCard = ({ guesses, onContinue }: Props) => {
+	const [confettiVisible, setConfettiVisible] = useState(false);
+
+	useEffect(() => {
+		if (guesses >= 10) {
+			setConfettiVisible(true);
+		}
+	}, [guesses]);
+
 	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>Results</CardTitle>
-				<CardDescription>How many correct guesses you 've made ?</CardDescription>
-			</CardHeader>
+		<>
+			{confettiVisible && <Fireworks autorun={{ speed: 0.2 }} />}
 
-			<CardContent className='text-center'>
-				<h1 className='text-6xl font-bold'>{guesses}</h1>
-				<p className='text-zinc-700'>Guesses</p>
-			</CardContent>
-			<CardFooter className='flex flex-row gap-2'>
-				<Link to='/'>
-					<Button className='bg-red-500 hover:bg-red-600'>
-						<HouseSimple size={24} /> Main menu
+			<Card>
+				<CardHeader>
+					<CardTitle>Results</CardTitle>
+					<CardDescription>How many correct guesses you 've made ?</CardDescription>
+				</CardHeader>
+
+				<CardContent className='text-center'>
+					<h1 className='text-6xl font-bold'>{guesses}</h1>
+					<p className='text-zinc-700'>Guesses</p>
+				</CardContent>
+				<CardFooter className='flex flex-row gap-2'>
+					<Link to='/'>
+						<Button className='bg-red-500 hover:bg-red-600'>
+							<HouseSimple size={24} /> Main menu
+						</Button>
+					</Link>
+
+					<Button className='w-full min-w-[240px]' onClick={onContinue}>
+						<Joystick size={24} /> Play again
 					</Button>
-				</Link>
-
-				<Button className='w-full min-w-[240px]' onClick={onContinue}>
-					<Joystick size={24} /> Play again
-				</Button>
-			</CardFooter>
-		</Card>
+				</CardFooter>
+			</Card>
+		</>
 	);
 };
