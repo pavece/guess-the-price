@@ -19,12 +19,12 @@ export const ProductCard = ({
 	onSelect,
 }: Props) => {
 	return (
-		<Card className='w-full pt-6'>
+		<Card className='pt-6 w-full'>
 			<CardContent className='w-full flex flex-row gap-4'>
 				<Image
 					src={image}
 					alt={`${name}'s image`}
-					className='w-[50%] lg:min-w-[250px] min-w-[180px] lg:h-[300px] md:h-[250px] h-[200px]'
+					className='w-fit lg:w-[50%] lg:min-w-[250px] min-w-[180px] lg:h-[300px]'
 				/>
 				<div className='[&>p]:mb-2 [&>p]:text-sm  [&>h3]:font-medium'>
 					<h3>Product name</h3>

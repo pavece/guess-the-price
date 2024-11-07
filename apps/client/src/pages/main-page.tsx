@@ -7,7 +7,7 @@ const containerVariant = {
 		opacity: 1,
 		transition: {
 			delayChildren: 0.2,
-			staggerChildren: 0.2,
+			staggerChildren: 0.15,
 		},
 	},
 };
@@ -29,7 +29,7 @@ export const MainPage = () => {
 				variants={containerVariant}
 				initial='hidden'
 				animate='visible'
-				className='py-12 flex flex-row flex-wrap gap-4'
+				className='py-12 flex flex-row flex-wrap gap-4 items-center justify-center'
 			>
 				<motion.div variants={itemVariant}>
 					<GameModeCard

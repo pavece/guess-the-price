@@ -102,7 +102,7 @@ export const ThisOrThatPage = () => {
 						animate={{ opacity: 1 }}
 						exit={{ opacity: 0 }}
 						transition={{ duration: 1 }}
-						className='flex flex-row gap-4 items-center'
+						className='flex flex-col md:flex-row gap-4 items-center'
 					>
 						<ProductCard
 							showingResult={true}
