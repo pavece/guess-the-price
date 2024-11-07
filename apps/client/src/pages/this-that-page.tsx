@@ -22,7 +22,6 @@ export const ThisOrThatPage = () => {
 
 	useEffect(() => {
 		setProducts(null);
-
 		getProducts().then(data => {
 			setProducts(data);
 		});

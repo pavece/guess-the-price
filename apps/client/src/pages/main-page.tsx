@@ -1,4 +1,21 @@
 import { GameModeCard } from '@/components/main-page/game-mode-card';
+import { motion } from 'framer-motion';
+
+const containerVariant = {
+	hidden: { opacity: 0 },
+	visible: {
+		opacity: 1,
+		transition: {
+			delayChildren: 0.2,
+			staggerChildren: 0.2,
+		},
+	},
+};
+
+const itemVariant = {
+	hidden: { opacity: 0, y: 150 },
+	visible: { opacity: 1, y: 0 },
+};
 
 export const MainPage = () => {
 	return (
@@ -8,27 +25,38 @@ export const MainPage = () => {
 				<p className='text-md text-zinc-600 '>Choose your desired game mode and start guessing the price!</p>
 			</div>
 
-			<div className='py-12 flex flex-row flex-wrap gap-4'>
-				<GameModeCard
-					title='Classic mode'
-					description='Get a product and guess the price.'
-					imageSrc='/images/classic-mode-image.svg'
-					link='/classic-mode'
-				/>
-				<GameModeCard
-					title='This or that'
-					description='Guess which product is more expensive.'
-					imageSrc='/images/this-or-that-mode-image.svg'
-					link='/this-that'
-				/>
-				<GameModeCard
-					title='Multiplayer mode (disabled)'
-					description='Check the github page to get more info.'
-					imageSrc='/images/multiplayer-mode-image.svg'
-					link='/'
-					disabled
-				/>
-			</div>
+			<motion.div
+				variants={containerVariant}
+				initial='hidden'
+				animate='visible'
+				className='py-12 flex flex-row flex-wrap gap-4'
+			>
+				<motion.div variants={itemVariant}>
+					<GameModeCard
+						title='Classic mode'
+						description='Get a product and guess the price.'
+						imageSrc='/images/classic-mode-image.svg'
+						link='/classic-mode'
+					/>
+				</motion.div>
+				<motion.div variants={itemVariant}>
+					<GameModeCard
+						title='This or that'
+						description='Guess which product is more expensive.'
+						imageSrc='/images/this-or-that-mode-image.svg'
+						link='/this-that'
+					/>
+				</motion.div>
+				<motion.div variants={itemVariant}>
+					<GameModeCard
+						title='Multiplayer mode (disabled)'
+						description='Check the github page to get more info.'
+						imageSrc='/images/multiplayer-mode-image.svg'
+						link='/'
+						disabled
+					/>
+				</motion.div>
+			</motion.div>
 		</div>
 	);
 };

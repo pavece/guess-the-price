@@ -5,6 +5,7 @@ import { ProductCard } from '@/components/classic-mode/product-card';
 import { Product } from '@/interfaces/product.interface';
 import { GuessCard } from '@/components/classic-mode/guess-card';
 import { Loading } from '@/components/ui/loading';
+import { motion } from 'framer-motion';
 
 const guessPrice = async (productId: string, price: number) => {
 	return fetch(import.meta.env.VITE_API_URL + `/guess/product?guessedPrice=${price}&productId=${productId}`, {
@@ -43,7 +44,12 @@ export const ClassicModePage = () => {
 			<div>
 				<h1 className='font-semibold text-3xl'>Classic mode - results</h1>
 				<p className='text-zinc-800'>Get a random product and guess the price.</p>
-				<div className='w-full flex items-center justify-center mt-10'>
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ duration: 1 }}
+					className='w-full flex items-center justify-center mt-10'
+				>
 					<ResultsCard
 						guesses={results}
 						onContinue={() => {
@@ -53,7 +59,7 @@ export const ClassicModePage = () => {
 							setGameEnded(false);
 						}}
 					/>
-				</div>
+				</motion.div>
 			</div>
 		);
 	}
@@ -69,7 +75,12 @@ export const ClassicModePage = () => {
 					<Loading />
 				</div>
 			) : (
-				<div className='mt-6 flex md:flex-row flex-col gap-4 flex-1'>
+				<motion.div
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ duration: 1 }}
+					className='mt-6 flex md:flex-row flex-col gap-4 flex-1'
+				>
 					<ProductCard
 						title={product.name}
 						image={product.image}
@@ -112,7 +123,7 @@ export const ClassicModePage = () => {
 							}}
 						/>
 					)}
-				</div>
+				</motion.div>
 			)}
 		</div>
 	);
