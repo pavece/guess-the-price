@@ -3,6 +3,7 @@ import { ResultsCard } from '@/components/this-that/results-card';
 import { Loading } from '@/components/ui/loading';
 import { Product } from '@/interfaces/product.interface';
 import { useEffect, useState } from 'react';
+import { AnimatePresence, motion, useAnimate } from 'framer-motion';
 
 const getProducts = async (current?: string) => {
 	return fetch(import.meta.env.VITE_API_URL + `/random/product/highLow`, {
@@ -17,6 +18,7 @@ export const ThisOrThatPage = () => {
 	const [playing, setPlaying] = useState(true);
 	const [guesses, setGuesses] = useState(0);
 	const [showingResult, setShowingResult] = useState(false);
+	const [scope, animate] = useAnimate();
 
 	useEffect(() => {
 		setProducts(null);
@@ -42,17 +44,19 @@ export const ThisOrThatPage = () => {
 		if (showingResult) return;
 
 		setShowingResult(true);
-		
+
 		//NOTE: Selected product from API response has nothing to do with newly selected product in client
 		const nonSelected = products?.selectedProduct === selected ? products.newProduct : products?.selectedProduct;
 
 		if (selected.price >= nonSelected!.price) {
 			const newProducts = await getProducts(selected.id);
 
-			setTimeout(() => {
+			setTimeout(async () => {
+				await animate(scope.current, { opacity: 0 }, { duration: 0.5 });
+				setShowingResult(false);
 				setProducts(newProducts);
 				setGuesses(g => g + 1);
-				setShowingResult(false);
+				await animate(scope.current, { opacity: 1.1 }, { duration: 0.5 });
 			}, 1500);
 		} else {
 			setTimeout(() => {
@@ -71,9 +75,14 @@ export const ThisOrThatPage = () => {
 						<h1 className='font-semibold text-3xl'>This or that mode</h1>
 						<p className='text-zinc-800'>Get two products and guess which one is more expensive.</p>
 					</div>
-					<div className='w-full flex items-center justify-center'>
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						transition={{ duration: 0.8 }}
+						className='w-full flex items-center justify-center'
+					>
 						<ResultsCard guesses={guesses} onContinue={restartGame} />
-					</div>
+					</motion.div>
 				</div>
 			</>
 		);
@@ -85,31 +94,40 @@ export const ThisOrThatPage = () => {
 				<h1 className='font-semibold text-3xl'>This or that mode</h1>
 				<p className='text-zinc-800'>Get two products and guess which one is more expensive.</p>
 			</div>
-
-			{!products ? (
-				<Loading />
-			) : (
-				<div className='flex flex-row gap-4 items-center'>
-					<ProductCard
-						showingResult={true}
-						product={products.selectedProduct}
-						onSelect={() => {
-							selectProduct(products.selectedProduct);
-						}}
-					/>
-					<div className='rounded-lg border border-stone-200 bg-white text-stone-950 shadow-sm p-3'>
-						<h2 className='text-2xl font-semibold'>VS</h2>
-					</div>
-					<ProductCard
-						showingResult={showingResult}
-						product={products.newProduct}
-						animate
-						onSelect={() => {
-							selectProduct(products.newProduct);
-						}}
-					/>
-				</div>
-			)}
+			<AnimatePresence>
+				{!products ? (
+					<Loading />
+				) : (
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 1 }}
+						className='flex flex-row gap-4 items-center'
+					>
+						<ProductCard
+							showingResult={true}
+							product={products.selectedProduct}
+							onSelect={() => {
+								selectProduct(products.selectedProduct);
+							}}
+						/>
+						<div className='rounded-lg border border-stone-200 bg-white text-stone-950 shadow-sm p-3'>
+							<h2 className='text-2xl font-semibold'>VS</h2>
+						</div>
+						<motion.div ref={scope} className='w-full'>
+							<ProductCard
+								showingResult={showingResult}
+								product={products.newProduct}
+								animate
+								onSelect={() => {
+									selectProduct(products.newProduct);
+								}}
+							/>
+						</motion.div>
+					</motion.div>
+				)}
+			</AnimatePresence>
 		</div>
 	);
 };
