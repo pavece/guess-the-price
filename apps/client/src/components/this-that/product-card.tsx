@@ -3,6 +3,7 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardFooter } from '../ui/card';
 import { Product } from '@/interfaces/product.interface';
 import CountUp from 'react-countup';
+import { Image } from '../ui/image';
 
 interface Props {
 	product: Product;
@@ -20,9 +21,11 @@ export const ProductCard = ({
 	return (
 		<Card className='w-full pt-6'>
 			<CardContent className='w-full flex flex-row gap-4'>
-				<div className='w-[50%] lg:min-w-[250px] min-w-[180px] lg:h-[300px] md:h-[250px] h-[200px] overflow-hidden relative '>
-					<img src={image} alt={`${name}'s image`} className='object-cover absolute' />
-				</div>
+				<Image
+					src={image}
+					alt={`${name}'s image`}
+					className='w-[50%] lg:min-w-[250px] min-w-[180px] lg:h-[300px] md:h-[250px] h-[200px]'
+				/>
 				<div className='[&>p]:mb-2 [&>p]:text-sm  [&>h3]:font-medium'>
 					<h3>Product name</h3>
 					<p className='break-words text-wrap whitespace-normal'>{name}</p>
