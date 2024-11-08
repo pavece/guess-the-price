@@ -1,12 +1,16 @@
 import { Server as HttpServer } from 'http';
 import { Server as SocketIoServer } from 'socket.io';
+import { MPSessionService } from './multiplayer/mp-session.service';
 
 export class WSService {
 	private static _instance: WSService;
 	private socketIoServer: SocketIoServer;
 
+	private mpSessionService: MPSessionService;
+
 	constructor(httpServer: HttpServer) {
 		this.socketIoServer = new SocketIoServer(httpServer);
+		this.mpSessionService = new MPSessionService();
 		this.start();
 	}
 
@@ -26,8 +30,15 @@ export class WSService {
 	}
 
 	public start() {
-		this.socketIoServer.of("/mp-ws").on('connection', socket => {
-			console.log(socket);
+		this.socketIoServer.of('/mp-ws').on('connection', socket => {
+			//Session management
+			socket.on('join-session', session => {
+				try {
+					this.mpSessionService.handlePlayerConnection(session);
+				} catch {
+					socket.emit('exception', { msg: 'The session does not exist' });
+				}
+			});
 		});
 	}
 }
