@@ -5,11 +5,8 @@ import { AppRoutes } from './routes';
 export class Server {
 	public readonly app = express();
 	private readonly appRoutes = new AppRoutes();
-	private readonly port: number;
 
-	constructor(port: number) {
-		this.port = port;
-	}
+	constructor() {}
 
 	public async start() {
 		this.app.use(express.urlencoded({ extended: true }));
@@ -18,8 +15,8 @@ export class Server {
 
 		this.app.use('/api', this.appRoutes.routes);
 
-		this.app.listen(this.port, () => {
-			console.log(`Server listening on port ${this.port}`);
-		});
+		// this.app.listen(this.port, () => {
+		// 	console.log(`Server listening on port ${this.port}`);
+		// });
 	}
 }
