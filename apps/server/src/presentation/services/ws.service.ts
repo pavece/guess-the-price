@@ -30,11 +30,15 @@ export class WSService {
 	}
 
 	public start() {
+		//TODO: Move this to specific event handlers
 		this.socketIoServer.of('/mp-ws').on('connection', socket => {
 			//Session management
-			socket.on('join-session', session => {
+			socket.on('join-session', sessionId => {
 				try {
-					this.mpSessionService.handlePlayerConnection(session);
+					const { session, player } = this.mpSessionService.handlePlayerConnection(sessionId);
+					socket.join(session.id);
+					socket.emit('session:details', { sessionId: session.id, host: session.host.name });
+					this.socketIoServer.of('/mp-ws').to(session.id).emit('session:player:joins', { playerName: player.name });
 				} catch {
 					socket.emit('exception', { msg: 'The session does not exist' });
 				}

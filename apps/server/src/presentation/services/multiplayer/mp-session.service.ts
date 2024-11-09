@@ -6,19 +6,20 @@ import { MpSession } from '../../../domain/multiplayer/session';
 export class MPSessionService {
 	private sessionManager = new MPSessionManager();
 
-	public handlePlayerConnection(sessionId?: string) {
+	//TODO: Handle socket id to prevent double submit
+	public handlePlayerConnection(sessionId?: string): { session: MpSession; player: { name: string; id: string } } {
 		const player = this.createPlayer();
 
 		if (!sessionId) {
 			const session = new MpSession({ ...player, isHost: true });
 			this.sessionManager.addSession(session);
-			return;
+			return { session, player };
 		}
 
 		const session = this.sessionManager.getSession(sessionId);
 		if (session) {
 			session.addPlayer({ ...player, isHost: false });
-			return;
+			return { session, player };
 		}
 
 		throw new Error('The session does not exist');
