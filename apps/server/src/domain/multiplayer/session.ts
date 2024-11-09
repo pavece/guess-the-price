@@ -5,6 +5,8 @@ export interface Player {
 	name: string;
 	id: string;
 	isHost: boolean;
+	socketId: string;
+	disconnectedAt?: Date; //Will be used to determine if its a real disconnection or just networking issues
 }
 
 export class MpSession {
@@ -33,5 +35,10 @@ export class MpSession {
 
 	public removePlayer(player: Player) {
 		this.players.filter(p => p.id !== player.id);
+	}
+
+	public isSocketConnected(socketId: string) {
+		const player = this.players.find(player => player.socketId == socketId);
+		return !!player;
 	}
 }

@@ -1,19 +1,21 @@
 import { MpSession } from './session';
 
-export class MPSessionManager {
-	private static _instance: MPSessionManager;
+export class MPSessionDatasource {
+	private static _instance: MPSessionDatasource;
 	private sessions = new Map<string, MpSession>();
+	private sessionOwners = new Map<string, string>();
 
 	constructor() {
-		if (MPSessionManager._instance) {
-			return MPSessionManager._instance;
+		if (MPSessionDatasource._instance) {
+			return MPSessionDatasource._instance;
 		}
 
-		MPSessionManager._instance = this;
+		MPSessionDatasource._instance = this;
 		return this;
 	}
 
 	public addSession(session: MpSession) {
+		this.sessionOwners.set(session.host.socketId, session.id);
 		this.sessions.set(session.id, session);
 	}
 
@@ -23,5 +25,9 @@ export class MPSessionManager {
 
 	public getSession(id: string) {
 		return this.sessions.get(id) ?? null;
+	}
+
+	public isSocketOwnerOfSession(socketId: string) {
+		return !!this.sessionOwners.get(socketId);
 	}
 }
