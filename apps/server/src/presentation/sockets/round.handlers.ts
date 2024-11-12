@@ -34,8 +34,12 @@ export const sessionRoundsSocketHandlers = (io: Server, socket: Socket) => {
 			throw new Error('Please specify a valid price');
 		}
 
-		await session.guessPrice(payload.playerId, Number(payload));
-		io.of('/mp-ws').to(session.id).emit('player:guess', session.getGuessesLeft());
+		await session.guessPrice(payload.playerId, Number(payload.price));
+		const guessesLeft = session.getGuessesLeft();
+
+		if (guessesLeft.currentGuesses !== guessesLeft.players) {
+			io.of('/mp-ws').to(session.id).emit('player:guess', session.getGuessesLeft());
+		}
 	};
 
 	socket.on('start-round', startRound);

@@ -3,6 +3,7 @@ import 'dotenv/config';
 import { RandomService } from '../../presentation/services/random.service';
 import { RandomProduct } from '../interfaces/product.interface';
 import { GuessService } from '../../presentation/services/guess.service';
+import { Server } from 'socket.io';
 
 export interface Player {
 	name: string;
@@ -33,13 +34,16 @@ export class MpSession {
 	private pastRounds: Round[];
 	private seenProducts: string[];
 
-	constructor(host: Player) {
+	private readonly io: Server;
+
+	constructor(host: Player, io: Server) {
 		this.host = host;
 		this.players.push(host);
 		this.id = uuid();
 		this.currentRound = null;
 		this.pastRounds = [];
 		this.seenProducts = [];
+		this.io = io;
 	}
 
 	public addPlayer(player: Player) {
@@ -91,13 +95,18 @@ export class MpSession {
 
 		try {
 			const results = await GuessService.guessProductPrice(this.currentRound.product.id, guessedPrice);
+			console.log(results, guessedPrice);
+
 			this.currentRound.guesses.push({
 				playerId,
 				guessedPrice,
 				points: results?.points ?? 0,
 				playerName: player.name,
 			});
-			//TODO: End round if last player
+
+			if (this.currentRound.guesses.length === this.players.length) {
+				this.endRound();
+			}
 		} catch {
 			throw new Error('Could not guess the price for this product');
 		}
@@ -109,6 +118,7 @@ export class MpSession {
 		}
 
 		this.pastRounds.push({ ...this.currentRound });
+		this.io.of('/mp-ws').to(this.id).emit('round:ends', this.getCurrentRoundPublic());
 		this.currentRound = null;
 	}
 
@@ -117,5 +127,19 @@ export class MpSession {
 			currentGuesses: this.currentRound?.guesses.length,
 			players: this.players.length,
 		};
+	}
+
+	public getCurrentRoundPublic() {
+		if (!this.currentRound) return null;
+		const modifiedGuesses = this.currentRound.guesses.map(g => {
+			return {
+				guessedPrice: g.guessedPrice,
+				points: g.points,
+				playerName: g.playerName,
+			};
+		});
+
+		const { guesses, ...rest } = this.currentRound;
+		return { ...rest, modifiedGuesses };
 	}
 }

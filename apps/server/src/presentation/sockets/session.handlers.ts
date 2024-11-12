@@ -4,7 +4,7 @@ import { MPSessionService } from '../services/multiplayer/mp-session.service';
 export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 	const joinSession = (payload: object) => {
 		try {
-			const { session, player } = MPSessionService.handlePlayerConnection(socket.id, String(payload));
+			const { session, player } = MPSessionService.handlePlayerConnection(socket.id, io, String(payload));
 			socket.join(session.id);
 			socket.emit('session:details', { sessionId: session.id, host: session.host.name });
 			socket.emit('player:details', { playerName: player.name, playerId: player.id });
