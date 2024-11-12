@@ -1,6 +1,7 @@
 import { Server as HttpServer } from 'http';
 import { Server as SocketIoServer } from 'socket.io';
 import { gameSessionSocketHandler } from '../sockets/session.handlers';
+import { sessionRoundsSocketHandlers } from '../sockets/round.handlers';
 
 export class WSService {
 	private static _instance: WSService;
@@ -30,6 +31,7 @@ export class WSService {
 		this.socketIoServer.of('/mp-ws').on('connection', socket => {
 			//Register handlers
 			gameSessionSocketHandler(this.socketIoServer, socket);
+			sessionRoundsSocketHandlers(this.socketIoServer, socket);
 		});
 
 		this.socketIoServer.of('/mp-ws').on('disconnect', () => {

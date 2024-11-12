@@ -20,6 +20,8 @@ interface PlayerGuess {
 export interface Round {
 	product: RandomProduct;
 	startTime: Date;
+	endTime: Date;
+	seconds: number;
 	guesses: PlayerGuess[];
 }
 export class MpSession {
@@ -68,7 +70,8 @@ export class MpSession {
 			const product = await RandomService.getRandomProduct(this.seenProducts);
 			this.seenProducts.push(product!.id);
 
-			this.currentRound = { product: product!, startTime: new Date(), guesses: [] };
+			this.currentRound = { product: product!, startTime: new Date(), endTime: new Date(), seconds: 30, guesses: [] };
+			return this.currentRound;
 		} catch {
 			throw new Error('Cannot start session');
 		}
@@ -94,6 +97,7 @@ export class MpSession {
 				points: results?.points ?? 0,
 				playerName: player.name,
 			});
+			//TODO: End round if last player
 		} catch {
 			throw new Error('Could not guess the price for this product');
 		}
@@ -106,5 +110,12 @@ export class MpSession {
 
 		this.pastRounds.push({ ...this.currentRound });
 		this.currentRound = null;
+	}
+
+	public getGuessesLeft() {
+		return {
+			currentGuesses: this.currentRound?.guesses.length,
+			players: this.players.length,
+		};
 	}
 }
