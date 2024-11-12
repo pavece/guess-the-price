@@ -3,8 +3,6 @@ import { GuessService } from '../services/guess.service';
 import { ControllerError } from '../../domain/errors/controller-error';
 
 export class GuessController {
-	private guessService = new GuessService();
-
 	public guessProductPrice = (req: Request, res: Response) => {
 		const { productId, guessedPrice } = req.query;
 
@@ -13,8 +11,7 @@ export class GuessController {
 			return;
 		}
 
-		this.guessService
-			.guessProductPrice(productId.toString(), Number(guessedPrice))
+		GuessService.guessProductPrice(productId.toString(), Number(guessedPrice))
 			.then(r => res.json(r))
 			.catch((error: ControllerError) => res.status(error.code).json({ error: error.message }));
 	};

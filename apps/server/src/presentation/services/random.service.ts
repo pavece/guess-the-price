@@ -5,8 +5,8 @@ import { checkControllerError } from '../../domain/errors/handle-controller-erro
 const MAX_PRICE_DIFF = 1;
 
 export class RandomService {
-	private prisma = new PrismaClient();
-	private productSelectProperties = {
+	private static prisma = new PrismaClient();
+	private static productSelectProperties = {
 		id: true,
 		name: true,
 		description: true,
@@ -21,7 +21,7 @@ export class RandomService {
 		},
 	};
 
-	public getRandomProduct = async (ignore: string[], category?: string) => {
+	public static getRandomProduct = async (ignore: string[], category?: string) => {
 		try {
 			const productCount = await this.prisma.product.count({
 				where: { id: { notIn: ignore }, categoryId: category },
@@ -39,7 +39,7 @@ export class RandomService {
 				select: this.productSelectProperties,
 			});
 
-			if (!randomProduct.length) {
+			if (!randomProduct[0]) {
 				throw new ControllerError("Couldn't find any product.", 404);
 			}
 
@@ -51,7 +51,7 @@ export class RandomService {
 		}
 	};
 
-	public getRandomProductHighLow = async (currentProductId: string, ignore: string[]) => {
+	public static getRandomProductHighLow = async (currentProductId: string, ignore: string[]) => {
 		try {
 			const products = [];
 

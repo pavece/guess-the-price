@@ -5,9 +5,9 @@ import { checkControllerError } from '../../domain/errors/handle-controller-erro
 const DIFFERENCE_LIMIT = 40;
 
 export class GuessService {
-	prisma = new PrismaClient();
+	private static prisma = new PrismaClient();
 
-	public guessProductPrice = async (productId: string, guessedPrice: number) => {
+	public static guessProductPrice = async (productId: string, guessedPrice: number) => {
 		try {
 			const product = await this.prisma.product.findFirst({ where: { id: productId } });
 
