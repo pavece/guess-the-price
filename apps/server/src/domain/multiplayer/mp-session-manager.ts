@@ -30,4 +30,12 @@ export class MPSessionDatasource {
 	public isSocketOwnerOfSession(socketId: string) {
 		return !!this.sessionOwners.get(socketId);
 	}
+
+	//Housekeeping
+	roundTick = () => {
+		if (!this.sessions) return;
+		this.sessions.forEach(session => {
+			session.roundTick();
+		});
+	};
 }

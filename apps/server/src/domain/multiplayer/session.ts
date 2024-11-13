@@ -4,6 +4,9 @@ import { RandomService } from '../../presentation/services/random.service';
 import { RandomProduct } from '../interfaces/product.interface';
 import { GuessService } from '../../presentation/services/guess.service';
 import { Server } from 'socket.io';
+import { compareDates } from '../../utils/compare-dates';
+
+const SECONDS_PER_ROUND = 30;
 
 export interface Player {
 	name: string;
@@ -21,7 +24,6 @@ interface PlayerGuess {
 export interface Round {
 	product: RandomProduct;
 	startTime: Date;
-	endTime: Date;
 	seconds: number;
 	guesses: PlayerGuess[];
 }
@@ -60,7 +62,7 @@ export class MpSession {
 	}
 
 	public removePlayer(player: Player) {
-		this.players.filter(p => p.id !== player.id);
+		this.players = this.players.filter(p => p.id !== player.id);
 	}
 
 	public isSocketConnected(socketId: string) {
@@ -74,7 +76,7 @@ export class MpSession {
 			const product = await RandomService.getRandomProduct(this.seenProducts);
 			this.seenProducts.push(product!.id);
 
-			this.currentRound = { product: product!, startTime: new Date(), endTime: new Date(), seconds: 30, guesses: [] };
+			this.currentRound = { product: product!, startTime: new Date(), seconds: SECONDS_PER_ROUND, guesses: [] };
 			return this.currentRound;
 		} catch {
 			throw new Error('Cannot start session');
@@ -139,7 +141,24 @@ export class MpSession {
 			};
 		});
 
-		const { guesses, ...rest } = this.currentRound;
+		const { guesses, ...rest } = this.currentRound; //eslint-disable-line @typescript-eslint/no-unused-vars
 		return { ...rest, modifiedGuesses };
+	}
+
+	public getResults() {
+		//TODO
+	}
+
+	public endSession() {
+		this.io.of('/mp-ws').to(this.id).emit('session:ends');
+	}
+
+	//Housekeeping
+	public roundTick() {
+		if (!this.currentRound) return;
+
+		if (compareDates(this.currentRound.startTime, new Date()) >= SECONDS_PER_ROUND) {
+			this.endRound();
+		}
 	}
 }

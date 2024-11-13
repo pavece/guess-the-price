@@ -2,6 +2,7 @@ import { Server } from './presentation/server';
 import 'dotenv/config';
 import http from 'http';
 import { WSService } from './presentation/services/ws.service';
+import { Housekeeper } from './domain/multiplayer/housekeeper';
 
 async function main() {
 	const server = new Server();
@@ -14,6 +15,7 @@ async function main() {
 	});
 
 	server.start();
+	Housekeeper.startRoundClock();
 }
 
 (() => {
