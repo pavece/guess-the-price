@@ -37,6 +37,11 @@ export class MPSessionService {
 		return { session, player };
 	}
 
+	public static handlePlayerDisconnection(socketId: string, sessionId: string) {
+		const playerSession = this.sessionManager.getSession(sessionId);
+		playerSession?.playerDisconnected(socketId);
+	}
+
 	public static createPlayer() {
 		const name = generateUsername('-');
 		const id = uuid();

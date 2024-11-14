@@ -7,7 +7,8 @@ import { Server } from 'socket.io';
 import { compareDates } from '../../utils/compare-dates';
 
 const SECONDS_PER_ROUND = 30;
-const SECONDS_INACTIVE = 10;
+const SECONDS_INACTIVE = 180;
+const SECONDS_PLAYER_INACTIVE = 10;
 
 export interface Player {
 	name: string;
@@ -65,8 +66,16 @@ export class MpSession {
 		this.refreshActivity();
 	}
 
+	public playerDisconnected(socketId: string) {
+		const disconnectedPlayer = this.players.find(player => player.socketId == socketId);
+		if (!disconnectedPlayer) return;
+
+		disconnectedPlayer.disconnectedAt = new Date();
+	}
+
 	public removePlayer(player: Player) {
 		this.players = this.players.filter(p => p.id !== player.id);
+		this.io.of('/mp-ws').to(this.id).emit('player:leaves', player.name);
 	}
 
 	public isSocketConnected(socketId: string) {
@@ -168,6 +177,16 @@ export class MpSession {
 		if (compareDates(this.currentRound.startTime, new Date()) >= SECONDS_PER_ROUND) {
 			this.endRound();
 		}
+	}
+
+	public playerCleanupTick() {
+		this.players.forEach(player => {
+			if (!player.disconnectedAt) return;
+
+			if (compareDates(player.disconnectedAt, new Date()) >= SECONDS_PLAYER_INACTIVE) {
+				this.removePlayer(player);
+			}
+		});
 	}
 
 	public refreshActivity() {

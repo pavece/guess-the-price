@@ -14,9 +14,15 @@ export class Housekeeper {
 		setInterval(this.sessionDatasource.cleanupTick, 60000);
 	}
 
+	private static startPlayerCleanupClock() {
+		console.log('CLK -> Player cleanup clock running');
+		setInterval(this.sessionDatasource.playerCleanupTick, 10000);
+	}
+
 	public static start() {
 		if (this.running) return;
 		this.startRoundClock();
 		this.startCleanupClock();
+		this.startPlayerCleanupClock();
 	}
 }

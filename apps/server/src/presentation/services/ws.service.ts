@@ -33,9 +33,5 @@ export class WSService {
 			gameSessionSocketHandler(this.socketIoServer, socket);
 			sessionRoundsSocketHandlers(this.socketIoServer, socket);
 		});
-
-		this.socketIoServer.of('/mp-ws').on('disconnect', () => {
-			//TODO: Handle user disconnect
-		});
 	}
 }
