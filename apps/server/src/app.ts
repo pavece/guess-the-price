@@ -15,7 +15,7 @@ async function main() {
 	});
 
 	server.start();
-	Housekeeper.startRoundClock();
+	Housekeeper.start();
 }
 
 (() => {

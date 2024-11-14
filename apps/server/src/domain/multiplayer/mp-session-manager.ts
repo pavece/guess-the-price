@@ -32,10 +32,19 @@ export class MPSessionDatasource {
 	}
 
 	//Housekeeping
-	roundTick = () => {
+	public roundTick = () => {
 		if (!this.sessions) return;
 		this.sessions.forEach(session => {
 			session.roundTick();
+		});
+	};
+
+	public cleanupTick = () => {
+		if (!this.sessions) return;
+		this.sessions.forEach(session => {
+			if (!session.checkSessionActive()) {
+				this.sessions.delete(session.id);
+			}
 		});
 	};
 }

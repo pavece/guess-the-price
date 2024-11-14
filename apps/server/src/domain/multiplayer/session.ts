@@ -7,6 +7,7 @@ import { Server } from 'socket.io';
 import { compareDates } from '../../utils/compare-dates';
 
 const SECONDS_PER_ROUND = 30;
+const SECONDS_INACTIVE = 10;
 
 export interface Player {
 	name: string;
@@ -31,6 +32,7 @@ export class MpSession {
 	public readonly host: Player;
 	public readonly id: string;
 	private players: Player[] = [];
+	private lastActive: Date;
 
 	private currentRound: Round | null;
 	private pastRounds: Round[];
@@ -46,6 +48,7 @@ export class MpSession {
 		this.pastRounds = [];
 		this.seenProducts = [];
 		this.io = io;
+		this.lastActive = new Date();
 	}
 
 	public addPlayer(player: Player) {
@@ -59,6 +62,7 @@ export class MpSession {
 		}
 
 		this.players.push(player);
+		this.refreshActivity();
 	}
 
 	public removePlayer(player: Player) {
@@ -77,6 +81,7 @@ export class MpSession {
 			this.seenProducts.push(product!.id);
 
 			this.currentRound = { product: product!, startTime: new Date(), seconds: SECONDS_PER_ROUND, guesses: [] };
+			this.refreshActivity();
 			return this.currentRound;
 		} catch {
 			throw new Error('Cannot start session');
@@ -109,6 +114,8 @@ export class MpSession {
 			if (this.currentRound.guesses.length === this.players.length) {
 				this.endRound();
 			}
+
+			this.refreshActivity();
 		} catch {
 			throw new Error('Could not guess the price for this product');
 		}
@@ -122,6 +129,7 @@ export class MpSession {
 		this.pastRounds.push({ ...this.currentRound });
 		this.io.of('/mp-ws').to(this.id).emit('round:ends', this.getCurrentRoundPublic());
 		this.currentRound = null;
+		this.refreshActivity();
 	}
 
 	public getGuessesLeft() {
@@ -160,5 +168,17 @@ export class MpSession {
 		if (compareDates(this.currentRound.startTime, new Date()) >= SECONDS_PER_ROUND) {
 			this.endRound();
 		}
+	}
+
+	public refreshActivity() {
+		this.lastActive = new Date();
+	}
+
+	public checkSessionActive() {
+		if (compareDates(this.lastActive, new Date()) >= SECONDS_INACTIVE) {
+			this.endSession();
+			return false;
+		}
+		return true;
 	}
 }

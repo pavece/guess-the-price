@@ -2,11 +2,21 @@ import { MPSessionDatasource } from './mp-session-manager';
 
 export class Housekeeper {
 	private static readonly sessionDatasource = new MPSessionDatasource();
-	private static runningRoundTick = false;
+	private static running = false;
 
-	public static startRoundClock() {
-		if (this.runningRoundTick) return;
-		console.log('Round clock running');
+	private static startRoundClock() {
+		console.log('CLK -> Round clock running');
 		setInterval(this.sessionDatasource.roundTick, 1000);
+	}
+
+	private static startCleanupClock() {
+		console.log('CLK -> Cleanup clock running');
+		setInterval(this.sessionDatasource.cleanupTick, 60000);
+	}
+
+	public static start() {
+		if (this.running) return;
+		this.startRoundClock();
+		this.startCleanupClock();
 	}
 }
