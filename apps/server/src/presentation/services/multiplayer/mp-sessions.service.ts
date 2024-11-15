@@ -38,6 +38,27 @@ export class MPSessionsService {
 		return { session, player };
 	}
 
+	public static handlePlayerReconnection(sessionId: string, playerId: string, socketId: string) {
+		const session = this.sessionManager.getSession(sessionId);
+		if (!session) {
+			throw new SocketError('This session does not exist');
+		}
+		const player = session.reconnectPlayer(playerId, socketId);
+
+		if (!player) {
+			throw new SocketError('Cannot reconnect to session');
+		}
+
+		return {
+			player,
+			sessionDetails: {
+				host: session.host.name,
+				id: session.id,
+				currentlyPlaying: !!session.getCurrentRoundPublic(),
+			},
+		};
+	}
+
 	public static handlePlayerDisconnection(socketId: string, sessionId: string) {
 		const playerSession = this.sessionManager.getSession(sessionId);
 		playerSession?.playerDisconnected(socketId);

@@ -64,6 +64,18 @@ export class MpSession {
 
 		this.players.push(player);
 		this.refreshActivity();
+		return player;
+	}
+
+	//Disconnected and reconnected due to networking issues
+	public reconnectPlayer(playerId: string, socketId: string) {
+		const existingPlayer = this.players.find(p => p.id === playerId);
+
+		if (existingPlayer) {
+			existingPlayer.socketId = socketId;
+			existingPlayer.disconnectedAt = undefined;
+			return existingPlayer;
+		}
 	}
 
 	public playerDisconnected(socketId: string) {
