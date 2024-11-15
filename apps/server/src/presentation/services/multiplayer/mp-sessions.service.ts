@@ -3,8 +3,9 @@ import { generateUsername } from 'unique-username-generator';
 import { MPSessionDatasource } from '../../../domain/multiplayer/mp-session-manager';
 import { MpSession } from '../../../domain/multiplayer/session';
 import { Server } from 'socket.io';
+import { SocketError } from '../../../domain/errors/socket-error';
 
-export class MPSessionService {
+export class MPSessionsService {
 	private static sessionManager = new MPSessionDatasource();
 
 	public static handlePlayerConnection(
@@ -15,7 +16,7 @@ export class MPSessionService {
 		const player = this.createPlayer();
 
 		if (this.sessionManager.isSocketOwnerOfSession(socketId)) {
-			throw new Error('You are the owner of a session');
+			throw new SocketError('You are the host of a session.');
 		}
 
 		if (!sessionId) {
@@ -26,11 +27,11 @@ export class MPSessionService {
 
 		const session = this.sessionManager.getSession(sessionId);
 		if (!session) {
-			throw new Error('The session does not exist');
+			throw new SocketError('The session does not exist');
 		}
 
 		if (session.isSocketConnected(socketId)) {
-			throw new Error('You are already connected to this session');
+			throw new SocketError('You are already connected to this session');
 		}
 
 		session.addPlayer({ ...player, isHost: false, socketId });

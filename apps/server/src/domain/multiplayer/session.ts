@@ -5,6 +5,7 @@ import { RandomProduct } from '../interfaces/product.interface';
 import { GuessService } from '../../presentation/services/guess.service';
 import { Server } from 'socket.io';
 import { compareDates } from '../../utils/compare-dates';
+import { SocketError } from '../errors/socket-error';
 
 const SECONDS_PER_ROUND = 30;
 const SECONDS_INACTIVE = 180;
@@ -53,13 +54,12 @@ export class MpSession {
 	}
 
 	public addPlayer(player: Player) {
-		//TODO: Implement custom error types for sockets
 		if (!player.name || !player.id) {
-			throw new Error('Cannot add player with empty id or name.');
+			throw new SocketError('Cannot add player with empty id or name.');
 		}
 
 		if (this.players.length >= (Number(process.env.MAX_PLAYERS_SESSION) || 10)) {
-			throw new Error('The session is full.');
+			throw new SocketError('The session is full.');
 		}
 
 		this.players.push(player);
@@ -93,20 +93,20 @@ export class MpSession {
 			this.refreshActivity();
 			return this.currentRound;
 		} catch {
-			throw new Error('Cannot start session');
+			throw new SocketError('Cannot start session');
 		}
 	}
 
 	public async guessPrice(playerId: string, guessedPrice: number) {
 		if (!this.currentRound) {
-			throw new Error('The round has finished');
+			throw new SocketError('The round has finished');
 		}
 		if (this.currentRound.guesses.find(guess => guess.playerId == playerId)) {
-			throw new Error('Player has already guessed the price');
+			throw new SocketError('Player has already guessed the price');
 		}
 		const player = this.players.find(player => player.id == playerId);
 		if (!player) {
-			throw new Error('Player is not in the session');
+			throw new SocketError('Player is not in the session');
 		}
 
 		try {
@@ -126,13 +126,13 @@ export class MpSession {
 
 			this.refreshActivity();
 		} catch {
-			throw new Error('Could not guess the price for this product');
+			throw new SocketError('Could not guess the price for this product');
 		}
 	}
 
 	public endRound() {
 		if (!this.currentRound) {
-			throw new Error('No active round');
+			throw new SocketError('No active round');
 		}
 
 		this.pastRounds.push({ ...this.currentRound });
