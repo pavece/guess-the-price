@@ -1,11 +1,9 @@
-import { v4 as uuid } from 'uuid';
 import 'dotenv/config';
-import { RandomService } from '../../presentation/services/random.service';
-import { RandomProduct } from '../interfaces/product.interface';
-import { GuessService } from '../../presentation/services/guess.service';
-import { Server } from 'socket.io';
-import { compareDates } from '../../utils/compare-dates';
+import { v4 as uuid } from 'uuid';
 import { SocketError } from '../errors/socket-error';
+import { Server } from 'socket.io';
+import { RandomProduct } from '../interfaces/product.interface';
+import { compareDates } from '../../utils/compare-dates';
 
 const SECONDS_PER_ROUND = 30;
 const SECONDS_INACTIVE = 180;
@@ -33,14 +31,14 @@ export interface Round {
 export class MpSession {
 	public readonly host: Player;
 	public readonly id: string;
-	private players: Player[] = [];
-	private lastActive: Date;
+	public players: Player[] = [];
+	public lastActive: Date;
 
-	private currentRound: Round | null;
-	private pastRounds: Round[];
-	private seenProducts: string[];
+	public currentRound: Round | null;
+	public pastRounds: Round[];
 
 	private readonly io: Server;
+	public seenProducts: string[];
 
 	constructor(host: Player, io: Server) {
 		this.host = host;
@@ -53,6 +51,7 @@ export class MpSession {
 		this.lastActive = new Date();
 	}
 
+	//Player management
 	public addPlayer(player: Player) {
 		if (!player.name || !player.id) {
 			throw new SocketError('Cannot add player with empty id or name.');
@@ -67,7 +66,6 @@ export class MpSession {
 		return player;
 	}
 
-	//Disconnected and reconnected due to networking issues
 	public reconnectPlayer(playerId: string, socketId: string) {
 		const existingPlayer = this.players.find(p => p.id === playerId);
 
@@ -95,21 +93,15 @@ export class MpSession {
 		return !!player;
 	}
 
-	//Rounds
-	public async startRound() {
-		try {
-			const product = await RandomService.getRandomProduct(this.seenProducts);
-			this.seenProducts.push(product!.id);
-
-			this.currentRound = { product: product!, startTime: new Date(), seconds: SECONDS_PER_ROUND, guesses: [] };
-			this.refreshActivity();
-			return this.currentRound;
-		} catch {
-			throw new SocketError('Cannot start session');
-		}
+	//Rounds & game
+	public startRound(product: RandomProduct) {
+		this.seenProducts.push(product!.id);
+		this.currentRound = { product: product!, startTime: new Date(), seconds: SECONDS_PER_ROUND, guesses: [] };
+		this.refreshActivity();
+		return this.currentRound;
 	}
 
-	public async guessPrice(playerId: string, guessedPrice: number) {
+	public async guessPrice(playerId: string, points: number, guessedPrice: number) {
 		if (!this.currentRound) {
 			throw new SocketError('The round has finished');
 		}
@@ -121,25 +113,18 @@ export class MpSession {
 			throw new SocketError('Player is not in the session');
 		}
 
-		try {
-			const results = await GuessService.guessProductPrice(this.currentRound.product.id, guessedPrice);
-			console.log(results, guessedPrice);
+		this.currentRound.guesses.push({
+			playerId,
+			guessedPrice,
+			points: points,
+			playerName: player.name,
+		});
 
-			this.currentRound.guesses.push({
-				playerId,
-				guessedPrice,
-				points: results?.points ?? 0,
-				playerName: player.name,
-			});
-
-			if (this.currentRound.guesses.length === this.players.length) {
-				this.endRound();
-			}
-
-			this.refreshActivity();
-		} catch {
-			throw new SocketError('Could not guess the price for this product');
+		if (this.currentRound.guesses.length === this.players.length) {
+			this.endRound();
 		}
+
+		this.refreshActivity();
 	}
 
 	public endRound() {
@@ -170,16 +155,16 @@ export class MpSession {
 			};
 		});
 
-		const { guesses, ...rest } = this.currentRound; //eslint-disable-line @typescript-eslint/no-unused-vars
+		const { guesses, ...rest } = this.currentRound;
 		return { ...rest, modifiedGuesses };
-	}
-
-	public getResults() {
-		//TODO
 	}
 
 	public endSession() {
 		this.io.of('/mp-ws').to(this.id).emit('session:ends');
+	}
+
+	public getResults() {
+		//TODO
 	}
 
 	//Housekeeping

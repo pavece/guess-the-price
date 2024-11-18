@@ -6,7 +6,7 @@ export default tseslint.config(
 	{
 		extends: [js.configs.recommended, ...tseslint.configs.recommended],
 		rules: {
-			'no-unused-vars': 'warn',
+			'@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
 		},
 	}
 );

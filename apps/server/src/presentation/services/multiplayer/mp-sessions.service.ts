@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { generateUsername } from 'unique-username-generator';
 import { MPSessionDatasource } from '../../../domain/multiplayer/mp-session-manager';
-import { MpSession } from '../../../domain/multiplayer/session';
+import { MpSession } from '../../../domain/multiplayer/mp-session';
 import { Server } from 'socket.io';
 import { SocketError } from '../../../domain/errors/socket-error';
 
