@@ -2,40 +2,46 @@ import { Server, Socket } from 'socket.io';
 import { MPSessionsService } from '../services/multiplayer/mp-sessions.service';
 import { handleSocketError } from '../../domain/errors/handle-socket-error';
 import { SocketError } from '../../domain/errors/socket-error';
+import { IncomingEvents, OutgoingEvents } from '../../domain/interfaces/mp-events.types';
+import { JoinSessionPayload, ReconnectPayload } from '../../domain/interfaces/mp-payloads.types';
 
 export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 	let currentSessionID: string | null = null;
 
-	const joinSession = (payload: object) => {
+	const joinSession = (payload: JoinSessionPayload) => {
 		try {
-			const { session, player } = MPSessionsService.handlePlayerConnection(socket.id, io, String(payload));
-			socket.join(session.id);
+			const { session, player } = MPSessionsService.handlePlayerConnection(socket.id, io, payload.sessionId);
 			currentSessionID = session.id;
-			socket.emit('session:details', {
+			socket.join(session.id);
+
+			socket.emit(OutgoingEvents.SESSION_DETAILS, {
 				sessionId: session.id,
 				host: session.host.name,
 				currentlyPlaying: !!session.getCurrentRoundPublic(),
 			});
-			socket.emit('player:details', { playerName: player.name, playerId: player.id });
-			io.of('/mp-ws').to(session.id).emit('player:joins', { playerName: player.name });
+			socket.emit(OutgoingEvents.PLAYER_DETAILS, { playerName: player.name, playerId: player.id });
+			
+			io.of('/mp-ws').to(session.id).emit(OutgoingEvents.PLAYER_JOINS_SESSION, { playerName: player.name });
 		} catch (error) {
 			handleSocketError(error, socket);
 		}
 	};
 
-	const reconnect = (payload: { playerId: string; sessionId: string }) => {
+	const reconnect = (payload: ReconnectPayload) => {
 		try {
 			if (!payload.playerId || !payload.sessionId) {
-				throw new SocketError('Provide a session id and playerID');
+				throw new SocketError('Provide a session id and playerId');
 			}
+			
 			const { player, sessionDetails } = MPSessionsService.handlePlayerReconnection(
 				payload.sessionId,
 				payload.playerId,
 				socket.id
 			);
-			socket.emit('player:details', { playerName: player.name, playerId: player.id });
-			socket.emit('session:details', sessionDetails);
-			io.of('/mp-ws').to(payload.sessionId).emit('player:reconnects', { playerName: player.name });
+
+			socket.emit(OutgoingEvents.PLAYER_DETAILS, { playerName: player.name, playerId: player.id });
+			socket.emit(OutgoingEvents.SESSION_DETAILS, sessionDetails);
+			io.of('/mp-ws').to(payload.sessionId).emit(OutgoingEvents.PLAYER_RECONNECTS, { playerName: player.name });
 		} catch (error) {
 			handleSocketError(error, socket);
 		}
@@ -46,7 +52,7 @@ export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 		MPSessionsService.handlePlayerDisconnection(socket.id, currentSessionID);
 	};
 
-	socket.on('join-session', joinSession);
-	socket.on('reconnect', reconnect);
+	socket.on(IncomingEvents.PLAYER_JOIN_SESSION, joinSession);
+	socket.on(IncomingEvents.PLAYER_RECONNECT, reconnect);
 	socket.on('disconnect', disconnect);
 };

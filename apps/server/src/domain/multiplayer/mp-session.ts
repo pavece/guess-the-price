@@ -4,6 +4,7 @@ import { SocketError } from '../errors/socket-error';
 import { Server } from 'socket.io';
 import { RandomProduct } from '../interfaces/product.interface';
 import { compareDates } from '../../utils/compare-dates';
+import { OutgoingEvents } from '../interfaces/mp-events.types';
 
 const SECONDS_PER_ROUND = 30;
 const SECONDS_INACTIVE = 180;
@@ -14,7 +15,7 @@ export interface Player {
 	id: string;
 	isHost: boolean;
 	socketId: string;
-	disconnectedAt?: Date; //Will be used to determine if its a real disconnection or just networking issues
+	disconnectedAt?: Date;
 }
 interface PlayerGuess {
 	guessedPrice: number;
@@ -85,7 +86,7 @@ export class MpSession {
 
 	public removePlayer(player: Player) {
 		this.players = this.players.filter(p => p.id !== player.id);
-		this.io.of('/mp-ws').to(this.id).emit('player:leaves', player.name);
+		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.PLAYER_LEAVES, player.name);
 	}
 
 	public isSocketConnected(socketId: string) {
@@ -133,7 +134,7 @@ export class MpSession {
 		}
 
 		this.pastRounds.push({ ...this.currentRound });
-		this.io.of('/mp-ws').to(this.id).emit('round:ends', this.getCurrentRoundPublic());
+		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.ROUND_ENDS, this.getCurrentRoundPublic());
 		this.currentRound = null;
 		this.refreshActivity();
 	}
@@ -142,6 +143,7 @@ export class MpSession {
 		return {
 			currentGuesses: this.currentRound?.guesses.length,
 			players: this.players.length,
+			roundEnded: !!this.currentRound,
 		};
 	}
 
@@ -160,7 +162,7 @@ export class MpSession {
 	}
 
 	public endSession() {
-		this.io.of('/mp-ws').to(this.id).emit('session:ends');
+		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.SESSION_ENDS);
 	}
 
 	public getResults() {
