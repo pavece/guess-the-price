@@ -47,11 +47,4 @@ export class MPSessionDatasource {
 			}
 		});
 	};
-
-	public playerCleanupTick = () => {
-		if (!this.sessions) return;
-		this.sessions.forEach(session => {
-			session.playerCleanupTick();
-		});
-	};
 }

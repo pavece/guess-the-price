@@ -6,10 +6,6 @@ import { RandomProduct } from '../interfaces/product.interface';
 import { compareDates } from '../../utils/compare-dates';
 import { OutgoingEvents } from '../interfaces/mp-events.types';
 
-const SECONDS_PER_ROUND = 30;
-const SECONDS_INACTIVE = 180;
-const SECONDS_PLAYER_INACTIVE = 10;
-
 export interface Player {
 	name: string;
 	id: string;
@@ -82,11 +78,7 @@ export class MpSession {
 		if (!disconnectedPlayer) return;
 
 		disconnectedPlayer.disconnectedAt = new Date();
-	}
-
-	public removePlayer(player: Player) {
-		this.players = this.players.filter(p => p.id !== player.id);
-		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.PLAYER_LEAVES, player.name);
+		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.PLAYER_LEAVES, { playerName: disconnectedPlayer.name });
 	}
 
 	public isSocketConnected(socketId: string) {
@@ -97,7 +89,12 @@ export class MpSession {
 	//Rounds & game
 	public startRound(product: RandomProduct) {
 		this.seenProducts.push(product!.id);
-		this.currentRound = { product: product!, startTime: new Date(), seconds: SECONDS_PER_ROUND, guesses: [] };
+		this.currentRound = {
+			product: product!,
+			startTime: new Date(),
+			seconds: Number(process.env.MP_SESSION_ROUND_DURATION_SECONDS ?? 30),
+			guesses: [],
+		};
 		this.refreshActivity();
 		return this.currentRound;
 	}
@@ -173,19 +170,12 @@ export class MpSession {
 	public roundTick() {
 		if (!this.currentRound) return;
 
-		if (compareDates(this.currentRound.startTime, new Date()) >= SECONDS_PER_ROUND) {
+		if (
+			compareDates(this.currentRound.startTime, new Date()) >=
+			Number(process.env.MP_SESSION_ROUND_DURATION_SECONDS ?? 30)
+		) {
 			this.endRound();
 		}
-	}
-
-	public playerCleanupTick() {
-		this.players.forEach(player => {
-			if (!player.disconnectedAt) return;
-
-			if (compareDates(player.disconnectedAt, new Date()) >= SECONDS_PLAYER_INACTIVE) {
-				this.removePlayer(player);
-			}
-		});
 	}
 
 	public refreshActivity() {
@@ -193,7 +183,7 @@ export class MpSession {
 	}
 
 	public checkSessionActive() {
-		if (compareDates(this.lastActive, new Date()) >= SECONDS_INACTIVE) {
+		if (compareDates(this.lastActive, new Date()) >= Number(process.env.MP_SESSION_INACTIVE_SECONDS ?? 180)) {
 			this.endSession();
 			return false;
 		}
