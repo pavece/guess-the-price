@@ -17,7 +17,7 @@ export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 			socket.emit(OutgoingEvents.SESSION_DETAILS, {
 				sessionId: session.id,
 				host: session.host.name,
-				currentlyPlaying: !!session.getCurrentRoundPublic(),
+				currentlyPlaying: !!session.currentRound,
 			});
 			socket.emit(OutgoingEvents.PLAYER_DETAILS, { playerName: player.name, playerId: player.id });
 

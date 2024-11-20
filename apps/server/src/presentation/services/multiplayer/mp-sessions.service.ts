@@ -54,7 +54,7 @@ export class MPSessionsService {
 			sessionDetails: {
 				host: session.host.name,
 				id: session.id,
-				currentlyPlaying: !!session.getCurrentRoundPublic(),
+				currentlyPlaying: !!session.currentRound,
 			},
 		};
 	}

@@ -17,9 +17,9 @@ export class MpSession {
 
 	public currentRound: Round | null;
 	public pastRounds: Round[];
+	public seenProducts: string[];
 
 	private readonly io: Server;
-	public seenProducts: string[];
 
 	constructor(host: Player, io: Server) {
 		this.host = host;
@@ -32,9 +32,18 @@ export class MpSession {
 		this.lastActive = new Date();
 	}
 
+	//Session management
+	public endSession() {
+		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.SESSION_ENDS);
+	}
+
+	public getSessionResults() {
+		//TODO
+	}
+
 	//Player management
 	public addPlayer(player: Player) {
-		if (!player.name || !player.id) {
+		if (!player) {
 			throw new SocketError('Cannot add player with empty id or name.');
 		}
 
@@ -109,13 +118,11 @@ export class MpSession {
 		this.refreshActivity();
 	}
 
-	public endRound() {
-		if (!this.currentRound) {
-			throw new SocketError('No active round');
-		}
+	private endRound() {
+		if (!this.currentRound) return;
 
 		this.pastRounds.push({ ...this.currentRound });
-		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.ROUND_ENDS, this.getCurrentRoundPublic());
+		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.ROUND_ENDS, this.getRoundResults());
 		this.currentRound = null;
 		this.refreshActivity();
 	}
@@ -128,7 +135,7 @@ export class MpSession {
 		};
 	}
 
-	public getCurrentRoundPublic() {
+	public getRoundResults() {
 		if (!this.currentRound) return null;
 		const modifiedGuesses = this.currentRound.guesses.map(g => {
 			return {
@@ -139,15 +146,7 @@ export class MpSession {
 		});
 
 		const { guesses, ...rest } = this.currentRound;
-		return { ...rest, modifiedGuesses };
-	}
-
-	public endSession() {
-		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.SESSION_ENDS);
-	}
-
-	public getResults() {
-		//TODO
+		return { ...rest, guesses: modifiedGuesses };
 	}
 
 	//Housekeeping
