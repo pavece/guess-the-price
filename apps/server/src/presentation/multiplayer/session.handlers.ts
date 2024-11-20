@@ -1,15 +1,18 @@
 import { Server, Socket } from 'socket.io';
 import { MPSessionsService } from '../services/multiplayer/mp-sessions.service';
 import { handleSocketError } from '../../domain/errors/handlers/handle-socket-error';
-import { SocketError } from '../../domain/errors/socket-error';
 import { IncomingEvents, OutgoingEvents } from '../../domain/interfaces/mp-events.types';
 import { JoinSessionPayload, ReconnectPayload } from '../../domain/interfaces/mp-payloads.types';
+import { validateMpPayload } from '../../domain/validation/validate-mp-payload';
+import { JoinSessionPayloadSchema, ReconnectPayloadSchema } from '../../domain/validation/mp-payloads-validation.schema';
 
 export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 	let currentSessionID: string | null = null;
 
 	const joinSession = (payload: JoinSessionPayload) => {
 		try {
+			validateMpPayload(payload, JoinSessionPayloadSchema)
+
 			const { session, player } = MPSessionsService.handlePlayerConnection(socket.id, io, payload.sessionId);
 			currentSessionID = session.id;
 			socket.join(session.id);
@@ -29,9 +32,7 @@ export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 
 	const reconnect = (payload: ReconnectPayload) => {
 		try {
-			if (!payload.playerId || !payload.sessionId) {
-				throw new SocketError('Provide a session id and playerId');
-			}
+			validateMpPayload(payload, ReconnectPayloadSchema)
 
 			const { player, sessionDetails } = MPSessionsService.handlePlayerReconnection(
 				payload.sessionId,
