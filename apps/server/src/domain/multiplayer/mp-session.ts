@@ -1,30 +1,14 @@
 import 'dotenv/config';
 import { v4 as uuid } from 'uuid';
-import { SocketError } from '../errors/socket-error';
 import { Server } from 'socket.io';
-import { RandomProduct } from '../interfaces/product.interface';
-import { compareDates } from '../../utils/compare-dates';
-import { OutgoingEvents } from '../interfaces/mp-events.types';
 
-export interface Player {
-	name: string;
-	id: string;
-	isHost: boolean;
-	socketId: string;
-	disconnectedAt?: Date;
-}
-interface PlayerGuess {
-	guessedPrice: number;
-	points: number;
-	playerId: string;
-	playerName: string;
-}
-export interface Round {
-	product: RandomProduct;
-	startTime: Date;
-	seconds: number;
-	guesses: PlayerGuess[];
-}
+import { SocketError } from '../errors/socket-error';
+import { compareDates } from '../../utils/compare-dates';
+
+import { OutgoingEvents } from '../interfaces/mp-events.types';
+import { Player, Round } from '../interfaces/mp.interfaces';
+import { RandomProduct } from '../interfaces/product.interface';
+
 export class MpSession {
 	public readonly host: Player;
 	public readonly id: string;

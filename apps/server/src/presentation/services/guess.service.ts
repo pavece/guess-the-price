@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { ControllerError } from '../../domain/errors/controller-error';
-import { checkControllerError } from '../../domain/errors/handle-controller-error';
+import { checkControllerError } from '../../domain/errors/handlers/handle-controller-error';
 
 const DIFFERENCE_LIMIT = 40;
 

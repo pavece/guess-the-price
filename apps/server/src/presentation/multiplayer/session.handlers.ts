@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
 import { MPSessionsService } from '../services/multiplayer/mp-sessions.service';
-import { handleSocketError } from '../../domain/errors/handle-socket-error';
+import { handleSocketError } from '../../domain/errors/handlers/handle-socket-error';
 import { SocketError } from '../../domain/errors/socket-error';
 import { IncomingEvents, OutgoingEvents } from '../../domain/interfaces/mp-events.types';
 import { JoinSessionPayload, ReconnectPayload } from '../../domain/interfaces/mp-payloads.types';
@@ -20,7 +20,7 @@ export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 				currentlyPlaying: !!session.getCurrentRoundPublic(),
 			});
 			socket.emit(OutgoingEvents.PLAYER_DETAILS, { playerName: player.name, playerId: player.id });
-			
+
 			io.of('/mp-ws').to(session.id).emit(OutgoingEvents.PLAYER_JOINS_SESSION, { playerName: player.name });
 		} catch (error) {
 			handleSocketError(error, socket);
@@ -32,7 +32,7 @@ export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 			if (!payload.playerId || !payload.sessionId) {
 				throw new SocketError('Provide a session id and playerId');
 			}
-			
+
 			const { player, sessionDetails } = MPSessionsService.handlePlayerReconnection(
 				payload.sessionId,
 				payload.playerId,
@@ -41,7 +41,7 @@ export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 
 			socket.emit(OutgoingEvents.PLAYER_DETAILS, { playerName: player.name, playerId: player.id });
 			socket.emit(OutgoingEvents.SESSION_DETAILS, sessionDetails);
-			socket.join(payload.sessionId)
+			socket.join(payload.sessionId);
 			io.of('/mp-ws').to(payload.sessionId).emit(OutgoingEvents.PLAYER_RECONNECTS, { playerName: player.name });
 		} catch (error) {
 			handleSocketError(error, socket);

@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { handleSocketError } from '../../domain/errors/handle-socket-error';
+import { handleSocketError } from '../../domain/errors/handlers/handle-socket-error';
 import { SocketError } from '../../domain/errors/socket-error';
 import { MPGameService } from '../services/multiplayer/mp-game.service';
 import { IncomingEvents, OutgoingEvents } from '../../domain/interfaces/mp-events.types';
@@ -9,7 +9,9 @@ export const sessionRoundsSocketHandlers = (io: Server, socket: Socket) => {
 	const startRound = async (payload: StartRoundPayload) => {
 		try {
 			const round = await MPGameService.startRound([...socket.rooms][1], payload.playerId);
-			io.of('/mp-ws').to([...socket.rooms][1]).emit(OutgoingEvents.ROUND_STARTS, round);
+			io.of('/mp-ws')
+				.to([...socket.rooms][1])
+				.emit(OutgoingEvents.ROUND_STARTS, round);
 		} catch (error) {
 			handleSocketError(error, socket);
 		}
@@ -28,7 +30,9 @@ export const sessionRoundsSocketHandlers = (io: Server, socket: Socket) => {
 			const guessesLeft = await MPGameService.makeGuess([...socket.rooms][1], payload.playerId, payload.guessedPrice);
 
 			if (guessesLeft.currentGuesses !== guessesLeft.players) {
-				io.of('/mp-ws').to([...socket.rooms][1]).emit(OutgoingEvents.PLAYER_GUESS, guessesLeft);
+				io.of('/mp-ws')
+					.to([...socket.rooms][1])
+					.emit(OutgoingEvents.PLAYER_GUESS, guessesLeft);
 			}
 		} catch (error) {
 			handleSocketError(error, socket);
