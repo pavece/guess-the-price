@@ -1,7 +1,7 @@
 import { Server as HttpServer } from 'http';
 import { Server as SocketIoServer } from 'socket.io';
-import { gameSessionSocketHandler } from '../sockets/session.handlers';
-import { sessionRoundsSocketHandlers } from '../sockets/round.handlers';
+import { gameSessionSocketHandler } from '../multiplayer/session.handlers';
+import { sessionRoundsSocketHandlers } from '../multiplayer/round.handlers';
 
 export class WSService {
 	private static _instance: WSService;

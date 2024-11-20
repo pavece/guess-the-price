@@ -1,4 +1,4 @@
-import { MPSessionDatasource } from './mp-session-manager';
+import { MPSessionDatasource } from '../datasources/mp-session-datasource';
 
 export class Housekeeper {
 	private static readonly sessionDatasource = new MPSessionDatasource();

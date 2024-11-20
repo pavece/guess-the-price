@@ -1,5 +1,5 @@
 import { SocketError } from '../../../domain/errors/socket-error';
-import { MPSessionDatasource } from '../../../domain/multiplayer/mp-session-manager';
+import { MPSessionDatasource } from '../../../domain/datasources/mp-session-datasource';
 import { GuessService } from '../guess.service';
 import { RandomService } from '../random.service';
 

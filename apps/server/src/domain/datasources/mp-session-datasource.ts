@@ -1,4 +1,4 @@
-import { MpSession } from './mp-session';
+import { MpSession } from '../multiplayer/mp-session';
 
 export class MPSessionDatasource {
 	private static _instance: MPSessionDatasource;
