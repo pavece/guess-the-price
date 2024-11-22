@@ -61,7 +61,6 @@ export interface RoundStartsOutgoingPayload {
 export interface PlayerGuessOutgoingPayload {
 	currentGuesses?: number;
 	players: number;
-	roundEnded: boolean;
 }
 
 //TODO: Session results payload

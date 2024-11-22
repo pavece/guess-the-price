@@ -6,6 +6,11 @@ export interface Player {
 	isHost: boolean;
 	socketId: string;
 	disconnectedAt?: Date;
+	metrics?: {
+		points: number;
+		guesses: number;
+		bestGuess: number;
+	};
 }
 
 export interface PlayerGuess {
@@ -20,4 +25,11 @@ export interface Round {
 	startTime: Date;
 	seconds: number;
 	guesses: PlayerGuess[];
+}
+
+export interface PlayerResultsRecord {
+	playerName: string;
+	points: number;
+	guesses: number;
+	bestGuess: number;
 }

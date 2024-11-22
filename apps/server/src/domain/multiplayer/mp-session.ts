@@ -6,7 +6,7 @@ import { SocketError } from '../errors/socket-error';
 import { compareDates } from '../../utils/compare-dates';
 
 import { OutgoingEvents } from '../interfaces/mp-events.types';
-import { Player, Round } from '../interfaces/mp.interfaces';
+import { Player, Round, PlayerResultsRecord } from '../interfaces/mp.interfaces';
 import { RandomProduct } from '../interfaces/product.interface';
 import { PlayerLeavesOutgoingPayload } from '../interfaces/mp-payloads.types';
 
@@ -24,7 +24,7 @@ export class MpSession {
 
 	constructor(host: Player, io: Server) {
 		this.host = host;
-		this.players.push(host);
+		this.addPlayer(host)
 		this.id = uuid();
 		this.currentRound = null;
 		this.pastRounds = [];
@@ -35,11 +35,32 @@ export class MpSession {
 
 	//Session management
 	public endSession() {
+		console.log(this.getSessionResults());
+
 		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.SESSION_ENDS);
 	}
 
 	public getSessionResults() {
-		//TODO
+		const sessionResults: { roundsPlayed: number; playerResults: PlayerResultsRecord[] } = {
+			roundsPlayed: 0,
+			playerResults: [],
+		};
+
+		if (!this.pastRounds.length) {
+			return sessionResults;
+		}
+
+		sessionResults.roundsPlayed = this.pastRounds.length + 1;
+		sessionResults.playerResults = this.players.map(player => ({
+			playerName: player.name,
+			guesses: player.metrics?.guesses ?? 0,
+			points: player.metrics?.points ?? 0,
+			bestGuess: player.metrics?.bestGuess ?? 0,
+		}));
+
+		sessionResults.playerResults = sessionResults.playerResults.sort((a, b) => a.points + b.points);
+
+		return sessionResults;
 	}
 
 	//Player management
@@ -52,7 +73,7 @@ export class MpSession {
 			throw new SocketError('The session is full.');
 		}
 
-		this.players.push(player);
+		this.players.push({ ...player, metrics: { points: 0, guesses: 0, bestGuess: 0 } });
 		this.refreshActivity();
 		return player;
 	}
@@ -72,7 +93,10 @@ export class MpSession {
 		if (!disconnectedPlayer) return;
 
 		disconnectedPlayer.disconnectedAt = new Date();
-		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.PLAYER_LEAVES, { playerName: disconnectedPlayer.name } as PlayerLeavesOutgoingPayload);
+		this.io
+			.of('/mp-ws')
+			.to(this.id)
+			.emit(OutgoingEvents.PLAYER_LEAVES, { playerName: disconnectedPlayer.name } as PlayerLeavesOutgoingPayload);
 	}
 
 	public isSocketConnected(socketId: string) {
@@ -112,6 +136,13 @@ export class MpSession {
 			playerName: player.name,
 		});
 
+		if (player.metrics!.bestGuess < points) {
+			player.metrics!.bestGuess = points;
+		}
+
+		player.metrics!.points += points;
+		player.metrics!.guesses++;
+
 		if (this.currentRound.guesses.length === this.players.length) {
 			this.endRound();
 		}
@@ -132,7 +163,6 @@ export class MpSession {
 		return {
 			currentGuesses: this.currentRound?.guesses.length,
 			players: this.players.length,
-			roundEnded: !!this.currentRound,
 		};
 	}
 
