@@ -2,7 +2,7 @@
 
 import { RandomProduct } from './product.interface';
 
-type RequiredPlayerId = {
+export type RequiredPlayerId = {
 	playerId: string;
 };
 

@@ -24,7 +24,7 @@ export class MpSession {
 
 	constructor(host: Player, io: Server) {
 		this.host = host;
-		this.addPlayer(host)
+		this.addPlayer(host);
 		this.id = uuid();
 		this.currentRound = null;
 		this.pastRounds = [];
@@ -35,9 +35,16 @@ export class MpSession {
 
 	//Session management
 	public endSession() {
-		console.log(this.getSessionResults());
+		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.SESSION_ENDS, this.getSessionResults());
+	}
 
-		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.SESSION_ENDS);
+	public restartSession() {
+		this.currentRound = null;
+		this.pastRounds = [];
+		this.seenProducts = [];
+		this.lastActive = new Date();
+
+		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.SESSION_RESTARTS);
 	}
 
 	public getSessionResults() {
@@ -50,7 +57,7 @@ export class MpSession {
 			return sessionResults;
 		}
 
-		sessionResults.roundsPlayed = this.pastRounds.length + 1;
+		sessionResults.roundsPlayed = this.pastRounds.length;
 		sessionResults.playerResults = this.players.map(player => ({
 			playerName: player.name,
 			guesses: player.metrics?.guesses ?? 0,

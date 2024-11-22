@@ -26,7 +26,7 @@ export class MPGameService {
 			return rest;
 		} catch (error) {
 			console.error(error);
-			throw new SocketError('Cannot start the round, an error ocurred while getting the product.');
+			throw new SocketError('Cannot start the round, an error occurred while getting the product.');
 		}
 	};
 
@@ -45,5 +45,45 @@ export class MPGameService {
 			console.error(error);
 			throw new SocketError('An error occurred while guessing the price for this product.');
 		}
+	};
+
+	public static endSession = (sessionId: string, playerId: string) => {
+		const session = this.mpSessionDatasource.getSession(sessionId);
+
+		if (!session) {
+			throw new SocketError('You must be in a game session.');
+		}
+
+		if (session.host.id !== playerId) {
+			throw new SocketError('Only the host can terminate the session.');
+		}
+
+		session.endSession();
+	};
+
+	public static terminateSession = (sessionId: string, playerId: string) => {
+		const session = this.mpSessionDatasource.getSession(sessionId);
+
+		if (!session) {
+			throw new SocketError('You must be in a game session.');
+		}
+
+		if (session.host.id !== playerId) {
+			throw new SocketError('Only the host can terminate the session.');
+		}
+	};
+
+	public static restartSession = async (sessionId: string, playerId: string) => {
+		const session = this.mpSessionDatasource.getSession(sessionId);
+
+		if (!session) {
+			throw new SocketError('You must be in a game session.');
+		}
+
+		if (session.host.id !== playerId) {
+			throw new SocketError('Only the host can restart the session.');
+		}
+
+		session.restartSession();
 	};
 }

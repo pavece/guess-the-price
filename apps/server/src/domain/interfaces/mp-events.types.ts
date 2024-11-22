@@ -4,6 +4,8 @@ export enum IncomingEvents {
 	PLAYER_GUESS_PRICE = 'guess-price',
 	HOST_SHOW_SESSION_RESULTS = 'session-results',
 	HOST_END_SESSION = 'end-session',
+	HOST_RESTART_SESSION = 'restart-session',
+	HOST_TERMINATE_SESSION = 'terminate-session',
 	PLAYER_RECONNECT = 'reconnect',
 }
 
@@ -19,4 +21,6 @@ export enum OutgoingEvents {
 	ROUND_ENDS = 'round:ends',
 	SESSION_SHOW_RESULTS = 'session:results',
 	SESSION_ENDS = 'session:ends',
+	SESSION_RESTARTS = 'session:restart',
+	SESSION_TERMINATE = 'session:terminated',
 }
