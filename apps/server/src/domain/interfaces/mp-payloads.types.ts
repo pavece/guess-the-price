@@ -1,3 +1,7 @@
+//Incoming payloads
+
+import { RandomProduct } from './product.interface';
+
 type RequiredPlayerId = {
 	playerId: string;
 };
@@ -19,3 +23,46 @@ export type ReconnectPayload = {
 export type StartRoundPayload = RequiredPlayerId;
 export type ShowResultsPayload = RequiredPlayerId;
 export type EndSessionPayload = RequiredPlayerId;
+
+//Outgoing payloads
+export interface PlayerLeavesOutgoingPayload {
+	playerName: string;
+}
+
+export interface PlayerJoinsOutgoingPayload {
+	playerName: string;
+}
+
+export interface PLayerReconnectsOutgoingPayload {
+	playerName: string;
+}
+
+export interface SessionDetailsOutgoingPayload {
+	currentlyPlaying: boolean;
+	host: string;
+	sessionId: string;
+}
+
+export interface PlayerDetailsOutgoingPayload {
+	playerName: string;
+	playerId: string;
+}
+
+export interface ExceptionOutgoingPayload {
+	msg: string;
+}
+
+export interface RoundStartsOutgoingPayload {
+	product: RandomProduct;
+	startTime: Date;
+	seconds: number;
+}
+
+export interface PlayerGuessOutgoingPayload {
+	currentGuesses?: number;
+	players: number;
+	roundEnded: boolean;
+}
+
+//TODO: Session results payload
+//TODO: Round results payload

@@ -8,6 +8,7 @@ import { compareDates } from '../../utils/compare-dates';
 import { OutgoingEvents } from '../interfaces/mp-events.types';
 import { Player, Round } from '../interfaces/mp.interfaces';
 import { RandomProduct } from '../interfaces/product.interface';
+import { PlayerLeavesOutgoingPayload } from '../interfaces/mp-payloads.types';
 
 export class MpSession {
 	public readonly host: Player;
@@ -71,7 +72,7 @@ export class MpSession {
 		if (!disconnectedPlayer) return;
 
 		disconnectedPlayer.disconnectedAt = new Date();
-		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.PLAYER_LEAVES, { playerName: disconnectedPlayer.name });
+		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.PLAYER_LEAVES, { playerName: disconnectedPlayer.name } as PlayerLeavesOutgoingPayload);
 	}
 
 	public isSocketConnected(socketId: string) {
