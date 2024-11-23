@@ -27,9 +27,15 @@ export interface Round {
 	guesses: PlayerGuess[];
 }
 
-export interface PlayerResultsRecord {
+export interface PlayerSessionResultsRecord {
 	playerName: string;
 	points: number;
 	guesses: number;
 	bestGuess: number;
+}
+
+export interface PlayerRoundResultsRecord {
+	playerName: string;
+	guessedPrice: number;
+	points: number;
 }

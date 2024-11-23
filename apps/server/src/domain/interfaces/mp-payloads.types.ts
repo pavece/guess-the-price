@@ -1,5 +1,6 @@
 //Incoming payloads
 
+import { PlayerSessionResultsRecord } from './mp.interfaces';
 import { RandomProduct } from './product.interface';
 
 export type RequiredPlayerId = {
@@ -63,5 +64,12 @@ export interface PlayerGuessOutgoingPayload {
 	players: number;
 }
 
-//TODO: Session results payload
+export interface SessionResultsOutgoingPayload {
+	roundsPlayed: number;
+	playerResults: PlayerSessionResultsRecord[];
+}
+
 //TODO: Round results payload
+export interface RoundResultsOutgoingPayload {
+	product: RandomProduct;
+}

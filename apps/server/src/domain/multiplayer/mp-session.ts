@@ -6,9 +6,13 @@ import { SocketError } from '../errors/socket-error';
 import { compareDates } from '../../utils/compare-dates';
 
 import { OutgoingEvents } from '../interfaces/mp-events.types';
-import { Player, Round, PlayerResultsRecord } from '../interfaces/mp.interfaces';
+import { Player, Round, PlayerSessionResultsRecord } from '../interfaces/mp.interfaces';
 import { RandomProduct } from '../interfaces/product.interface';
-import { PlayerLeavesOutgoingPayload } from '../interfaces/mp-payloads.types';
+import {
+	PlayerLeavesOutgoingPayload,
+	RoundResultsOutgoingPayload,
+	SessionResultsOutgoingPayload,
+} from '../interfaces/mp-payloads.types';
 
 export class MpSession {
 	public readonly host: Player;
@@ -35,7 +39,10 @@ export class MpSession {
 
 	//Session management
 	public endSession() {
-		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.SESSION_ENDS, this.getSessionResults());
+		this.io
+			.of('/mp-ws')
+			.to(this.id)
+			.emit(OutgoingEvents.SESSION_ENDS, this.getSessionResults() as SessionResultsOutgoingPayload);
 	}
 
 	public restartSession() {
@@ -48,7 +55,7 @@ export class MpSession {
 	}
 
 	public getSessionResults() {
-		const sessionResults: { roundsPlayed: number; playerResults: PlayerResultsRecord[] } = {
+		const sessionResults: { roundsPlayed: number; playerResults: PlayerSessionResultsRecord[] } = {
 			roundsPlayed: 0,
 			playerResults: [],
 		};
@@ -161,7 +168,10 @@ export class MpSession {
 		if (!this.currentRound) return;
 
 		this.pastRounds.push({ ...this.currentRound });
-		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.ROUND_ENDS, this.getRoundResults());
+		this.io
+			.of('/mp-ws')
+			.to(this.id)
+			.emit(OutgoingEvents.ROUND_ENDS, this.getRoundResults() as RoundResultsOutgoingPayload);
 		this.currentRound = null;
 		this.refreshActivity();
 	}
@@ -175,7 +185,7 @@ export class MpSession {
 
 	public getRoundResults() {
 		if (!this.currentRound) return null;
-		const modifiedGuesses = this.currentRound.guesses.map(g => {
+		const results = this.currentRound.guesses.map(g => {
 			return {
 				guessedPrice: g.guessedPrice,
 				points: g.points,
@@ -183,8 +193,10 @@ export class MpSession {
 			};
 		});
 
-		const { guesses, ...rest } = this.currentRound;
-		return { ...rest, guesses: modifiedGuesses };
+		return {
+			product: this.currentRound.product,
+			playerResults: results,
+		};
 	}
 
 	//Housekeeping
