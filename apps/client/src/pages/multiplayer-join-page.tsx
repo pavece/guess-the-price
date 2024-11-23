@@ -3,19 +3,17 @@ import { useEffect, useState } from 'react';
 import { socket } from '@/socket';
 import { PlayerDetailsOutgoingPayload, SessionDetailsOutgoingPayload } from '@/interfaces/mp-payloads.types';
 import { Input } from '@/components/ui/input';
-import { IncomingEvents, OutgoingEvents } from '@/interfaces/mp-events.types';
+import { OutgoingEvents } from '@/interfaces/mp-events.types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useMpStore } from '@/stores/mp-store';
+import { useMultiplayer } from '@/hooks/use-multiplayer';
 
 export const MultiplayerJoinPage = () => {
-	const [existingSessionId, setSessionId] = useState('');
 	const navigate = useNavigate();
 	const { setSession, setPlayer, sessionId } = useMpStore();
-
-	const createSession = () => {
-		socket.emit(IncomingEvents.PLAYER_JOIN_SESSION, {});
-	};
+	const { createSession } = useMultiplayer();
+	const [existingSessionId, setSessionId] = useState('');
 
 	const joinSession = () => {
 		if (existingSessionId.length > 0) {
@@ -24,11 +22,14 @@ export const MultiplayerJoinPage = () => {
 	};
 
 	useEffect(() => {
-		if(sessionId){
+		if (sessionId) {
 			navigate(`/multiplayer/${sessionId}`);
 		}
 
-		const onSessionDetails = (sessionPayload: SessionDetailsOutgoingPayload, playerPayload: PlayerDetailsOutgoingPayload) => {
+		const onSessionDetails = (
+			sessionPayload: SessionDetailsOutgoingPayload,
+			playerPayload: PlayerDetailsOutgoingPayload
+		) => {
 			if (!sessionPayload || !playerPayload) return;
 
 			setSession({ sessionId: sessionPayload.sessionId, sessionCurrentlyPlaying: sessionPayload.currentlyPlaying });
@@ -43,7 +44,7 @@ export const MultiplayerJoinPage = () => {
 		return () => {
 			socket.off('session:details', onSessionDetails);
 		};
-	}, [navigate, setPlayer, setSession]);
+	}, [navigate, setPlayer, setSession, sessionId]);
 
 	return (
 		<div>

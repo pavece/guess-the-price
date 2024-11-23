@@ -1,3 +1,4 @@
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { create } from 'zustand';
 
 export interface PlayerDetails {
@@ -16,13 +17,21 @@ interface MpState extends PlayerDetails, SessionDetails {
 	setPlayer: (details: PlayerDetails) => void;
 }
 
-export const useMpStore = create<MpState>(set => ({
-	sessionId: '',
-	sessionCurrentlyPlaying: false,
-	playerId: '',
-	playerName: '',
-	isHost: false,
+export const useMpStore = create<MpState>()(
+	persist(
+		set => ({
+			sessionId: '',
+			sessionCurrentlyPlaying: false,
+			playerId: '',
+			playerName: '',
+			isHost: false,
 
-	setSession: (details: SessionDetails) => set(() => ({ ...details })),
-	setPlayer: (details: PlayerDetails) => set(() => ({ ...details })),
-}));
+			setSession: (details: SessionDetails) => set(() => ({ ...details })),
+			setPlayer: (details: PlayerDetails) => set(() => ({ ...details })),
+		}),
+		{
+			name: 'multiplayer',
+			storage: createJSONStorage(() => sessionStorage),
+		}
+	)
+);
