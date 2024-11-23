@@ -31,15 +31,15 @@ export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 			currentSessionID = session.id;
 			socket.join(session.id);
 
-			socket.emit(OutgoingEvents.SESSION_DETAILS, {
-				sessionId: session.id,
-				host: session.host.name,
-				currentlyPlaying: !!session.currentRound,
-			} as SessionDetailsOutgoingPayload);
-			socket.emit(OutgoingEvents.PLAYER_DETAILS, {
-				playerName: player.name,
-				playerId: player.id,
-			} as PlayerDetailsOutgoingPayload);
+			socket.emit(
+				OutgoingEvents.SESSION_DETAILS,
+				{
+					sessionId: session.id,
+					host: session.host.name,
+					currentlyPlaying: !!session.currentRound,
+				} as SessionDetailsOutgoingPayload,
+				{ playerId: player.id, playerName: player.name } as PlayerDetailsOutgoingPayload
+			);
 
 			io.of('/mp-ws')
 				.to(session.id)
@@ -59,11 +59,11 @@ export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 				socket.id
 			);
 
-			socket.emit(OutgoingEvents.PLAYER_DETAILS, {
-				playerName: player.name,
-				playerId: player.id,
-			} as PlayerDetailsOutgoingPayload);
-			socket.emit(OutgoingEvents.SESSION_DETAILS, sessionDetails as SessionDetailsOutgoingPayload);
+			socket.emit(
+				OutgoingEvents.SESSION_DETAILS,
+				sessionDetails as SessionDetailsOutgoingPayload,
+				{ playerId: player.id, playerName: player.name } as PlayerDetailsOutgoingPayload
+			);
 			socket.join(payload.sessionId);
 
 			io.of('/mp-ws')
@@ -110,7 +110,9 @@ export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 			const sessionId = [...socket.rooms][1];
 			MPGameService.restartSession(sessionId, payload.playerId);
 			const round = await MPGameService.startRound([...socket.rooms][1], payload.playerId);
-			io.of('/mp-ws').to([...socket.rooms][1]).emit(OutgoingEvents.ROUND_STARTS, round as RoundStartsOutgoingPayload);
+			io.of('/mp-ws')
+				.to([...socket.rooms][1])
+				.emit(OutgoingEvents.ROUND_STARTS, round as RoundStartsOutgoingPayload);
 		} catch (error) {
 			handleSocketError(error, socket);
 		}

@@ -1,7 +1,12 @@
+import { useMpStore } from '@/stores/mp-store';
 import { useParams } from 'react-router-dom';
 
 export const MultiplayerPage = () => {
 	const { id } = useParams();
+	const mpStore = useMpStore();
+
+	console.log(mpStore)
+
 
 	return (
 		<div>

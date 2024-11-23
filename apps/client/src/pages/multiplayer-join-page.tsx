@@ -1,20 +1,49 @@
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { socket } from '@/socket';
+import { PlayerDetailsOutgoingPayload, SessionDetailsOutgoingPayload } from '@/interfaces/mp-payloads.types';
+import { Input } from '@/components/ui/input';
+import { IncomingEvents, OutgoingEvents } from '@/interfaces/mp-events.types';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { useMpStore } from '@/stores/mp-store';
 
 export const MultiplayerJoinPage = () => {
-	const [sessionId, setSessionId] = useState('');
+	const [existingSessionId, setSessionId] = useState('');
 	const navigate = useNavigate();
+	const { setSession, setPlayer, sessionId } = useMpStore();
 
-	const createSession = () => {};
+	const createSession = () => {
+		socket.emit(IncomingEvents.PLAYER_JOIN_SESSION, {});
+	};
 
 	const joinSession = () => {
-		if (sessionId.length > 0) {
-			navigate(`/multiplayer/${sessionId}`);
+		if (existingSessionId.length > 0) {
+			navigate(`/multiplayer/${existingSessionId}`);
 		}
 	};
+
+	useEffect(() => {
+		if(sessionId){
+			navigate(`/multiplayer/${sessionId}`);
+		}
+
+		const onSessionDetails = (sessionPayload: SessionDetailsOutgoingPayload, playerPayload: PlayerDetailsOutgoingPayload) => {
+			if (!sessionPayload || !playerPayload) return;
+
+			setSession({ sessionId: sessionPayload.sessionId, sessionCurrentlyPlaying: sessionPayload.currentlyPlaying });
+			setPlayer({ ...playerPayload, isHost: false });
+
+			navigate(`/multiplayer/${sessionPayload.sessionId}`);
+		};
+
+		socket.connect();
+		socket.on(OutgoingEvents.SESSION_DETAILS, onSessionDetails);
+
+		return () => {
+			socket.off('session:details', onSessionDetails);
+		};
+	}, [navigate, setPlayer, setSession]);
 
 	return (
 		<div>
@@ -45,9 +74,9 @@ export const MultiplayerJoinPage = () => {
 							<Input
 								placeholder='Enter session code...'
 								onChange={e => setSessionId(e.target.value)}
-								value={sessionId}
+								value={existingSessionId}
 							></Input>
-							<Button className='w-full mt-4' disabled={sessionId.length <= 0} type='submit'>
+							<Button className='w-full mt-4' disabled={existingSessionId.length <= 0} type='submit'>
 								Join
 							</Button>
 						</form>

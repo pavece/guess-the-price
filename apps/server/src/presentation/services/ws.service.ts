@@ -8,7 +8,7 @@ export class WSService {
 	private socketIoServer: SocketIoServer;
 
 	constructor(httpServer: HttpServer) {
-		this.socketIoServer = new SocketIoServer(httpServer);
+		this.socketIoServer = new SocketIoServer(httpServer, { cors: { origin: '*' } }); //TODO: update to prod
 		this.start();
 	}
 
