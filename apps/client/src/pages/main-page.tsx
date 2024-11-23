@@ -49,11 +49,10 @@ export const MainPage = () => {
 				</motion.div>
 				<motion.div variants={itemVariant}>
 					<GameModeCard
-						title='Multiplayer mode (disabled)'
-						description='Check the github page to get more info.'
+						title='Multiplayer mode'
+						description='Play the classic mode with your friends.'
 						imageSrc='/images/multiplayer-mode-image.svg'
-						link='/'
-						disabled
+						link='/multiplayer'
 					/>
 				</motion.div>
 			</motion.div>
