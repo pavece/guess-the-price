@@ -5,7 +5,7 @@ export const Navbar = () => {
 		<nav className='p-5'>
 			<div>
 				<Link to='/'>
-					<img src='./images/logo.svg' alt='Guess the price logo' className='w-[260px]' />
+					<img src='/images/logo.svg' alt='Guess the price logo' className='w-[260px]' />
 				</Link>
 			</div>
 		</nav>

@@ -37,6 +37,7 @@ export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 					sessionId: session.id,
 					host: session.host.name,
 					currentlyPlaying: !!session.currentRound,
+					players: session.players.length,
 				} as SessionDetailsOutgoingPayload,
 				{ playerId: player.id, playerName: player.name } as PlayerDetailsOutgoingPayload
 			);

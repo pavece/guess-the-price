@@ -42,6 +42,7 @@ export interface SessionDetailsOutgoingPayload {
 	currentlyPlaying: boolean;
 	host: string;
 	sessionId: string;
+	players: number;
 }
 
 export interface PlayerDetailsOutgoingPayload {

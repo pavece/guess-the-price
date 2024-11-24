@@ -1,6 +1,5 @@
 //Incoming payloads
 
-
 export type RequiredPlayerId = {
 	playerId: string;
 };
@@ -40,6 +39,7 @@ export interface SessionDetailsOutgoingPayload {
 	currentlyPlaying: boolean;
 	host: string;
 	sessionId: string;
+	players: number;
 }
 
 export interface PlayerDetailsOutgoingPayload {
