@@ -32,14 +32,20 @@ export const useMultiplayerConnection = () => {
 	useEffect(() => {
 		connect();
 
-		const onSessionDetails = (sessionPayload: SessionDetailsOutgoingPayload, playerPayload: PlayerDetailsOutgoingPayload) => {
+		const onSessionDetails = (
+			sessionPayload: SessionDetailsOutgoingPayload,
+			playerPayload: PlayerDetailsOutgoingPayload
+		) => {
 			if (!sessionPayload || !playerPayload) return;
 
-			setSession({ sessionId: sessionPayload.sessionId, sessionCurrentlyPlaying: sessionPayload.currentlyPlaying });
+			setSession({
+				sessionId: sessionPayload.sessionId,
+				sessionCurrentlyPlaying: sessionPayload.currentlyPlaying,
+				players: sessionPayload.players,
+			});
 			setPlayer({ ...playerPayload, isHost: sessionPayload.host === playerPayload.playerName });
 
-
-			if(sessionPayload.host === playerPayload.playerName) {
+			if (sessionPayload.host === playerPayload.playerName) {
 				//Joining as host from mp joining page
 				navigate(`/multiplayer/${sessionPayload.sessionId}`);
 			}

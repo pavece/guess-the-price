@@ -29,6 +29,7 @@ export interface PlayerLeavesOutgoingPayload {
 
 export interface PlayerJoinsOutgoingPayload {
 	playerName: string;
+	players: number;
 }
 
 export interface PLayerReconnectsOutgoingPayload {

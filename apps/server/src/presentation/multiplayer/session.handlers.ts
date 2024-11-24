@@ -44,7 +44,7 @@ export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 
 			io.of('/mp-ws')
 				.to(session.id)
-				.emit(OutgoingEvents.PLAYER_JOINS_SESSION, { playerName: player.name } as PlayerJoinsOutgoingPayload);
+				.emit(OutgoingEvents.PLAYER_JOINS_SESSION, { playerName: player.name, players: session.players.length } as PlayerJoinsOutgoingPayload);
 		} catch (error) {
 			handleSocketError(error, socket);
 		}

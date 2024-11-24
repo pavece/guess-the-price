@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { socket } from '@/socket';
 import { PlayerJoinsOutgoingPayload } from '@/interfaces/mp-payloads.types';
 import { OutgoingEvents } from '@/interfaces/mp-events.types';
+import { ShareSessionCard } from '@/components/multiplayer/share-session-card';
 
 export const MultiplayerPage = () => {
 	const { id } = useParams();
@@ -20,6 +21,8 @@ export const MultiplayerPage = () => {
 	useEffect(() => {
 		const playerJoinsSession = (payload: PlayerJoinsOutgoingPayload) => {
 			console.log(payload);
+			if (payload.playerName === mpStore.playerName) return;
+			mpStore.setPlayers(payload.players);
 		};
 
 		socket.on(OutgoingEvents.PLAYER_JOINS_SESSION, playerJoinsSession);
@@ -35,9 +38,11 @@ export const MultiplayerPage = () => {
 				<h1 className='font-semibold text-3xl'>Multiplayer</h1>
 				<p className='text-zinc-800'>Play the classic mode with your friends.</p>
 			</div>
-
-			<p>{id}</p>
-			<p>{mpStore.playerName}</p>
+			<div>
+				<div className='flex items-center justify-center'>
+					<ShareSessionCard isHost={mpStore.isHost} playerName={mpStore.playerName} sessionId={mpStore.sessionId} playerNumber={mpStore.players} onStart={() => {}} />
+				</div>
+			</div>
 		</div>
 	);
 };
