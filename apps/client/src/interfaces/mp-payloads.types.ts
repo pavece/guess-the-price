@@ -25,6 +25,7 @@ export type EndSessionPayload = RequiredPlayerId;
 //Outgoing payloads
 export interface PlayerLeavesOutgoingPayload {
 	playerName: string;
+	players: number;
 }
 
 export interface PlayerJoinsOutgoingPayload {
@@ -34,6 +35,7 @@ export interface PlayerJoinsOutgoingPayload {
 
 export interface PLayerReconnectsOutgoingPayload {
 	playerName: string;
+	players: number;
 }
 
 export interface SessionDetailsOutgoingPayload {

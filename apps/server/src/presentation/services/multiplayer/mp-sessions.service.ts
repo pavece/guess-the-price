@@ -56,6 +56,7 @@ export class MPSessionsService {
 				sessionId: session.id,
 				currentlyPlaying: !!session.currentRound,
 			},
+			players: session.players.length
 		};
 	}
 

@@ -42,9 +42,7 @@ export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 				{ playerId: player.id, playerName: player.name } as PlayerDetailsOutgoingPayload
 			);
 
-			io.of('/mp-ws')
-				.to(session.id)
-				.emit(OutgoingEvents.PLAYER_JOINS_SESSION, { playerName: player.name, players: session.players.length } as PlayerJoinsOutgoingPayload);
+			io.of('/mp-ws').to(session.id).emit(OutgoingEvents.PLAYER_JOINS_SESSION, { playerName: player.name, players: session.players.length } as PlayerJoinsOutgoingPayload);
 		} catch (error) {
 			handleSocketError(error, socket);
 		}
@@ -54,22 +52,16 @@ export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 		try {
 			validateMpPayload(payload, ReconnectPayloadSchema);
 
-			const { player, sessionDetails } = MPSessionsService.handlePlayerReconnection(
+			const { player, sessionDetails, players } = MPSessionsService.handlePlayerReconnection(
 				payload.sessionId,
 				payload.playerId,
 				socket.id
 			);
 
-			socket.emit(
-				OutgoingEvents.SESSION_DETAILS,
-				sessionDetails as SessionDetailsOutgoingPayload,
-				{ playerId: player.id, playerName: player.name } as PlayerDetailsOutgoingPayload
-			);
+			socket.emit(OutgoingEvents.SESSION_DETAILS, sessionDetails as SessionDetailsOutgoingPayload, { playerId: player.id, playerName: player.name } as PlayerDetailsOutgoingPayload);
 			socket.join(payload.sessionId);
 
-			io.of('/mp-ws')
-				.to(payload.sessionId)
-				.emit(OutgoingEvents.PLAYER_RECONNECTS, { playerName: player.name } as PLayerReconnectsOutgoingPayload);
+			io.of('/mp-ws').to(payload.sessionId).emit(OutgoingEvents.PLAYER_RECONNECTS, { playerName: player.name, players } as PLayerReconnectsOutgoingPayload);
 		} catch (error) {
 			handleSocketError(error, socket);
 		}

@@ -107,10 +107,7 @@ export class MpSession {
 		if (!disconnectedPlayer) return;
 
 		disconnectedPlayer.disconnectedAt = new Date();
-		this.io
-			.of('/mp-ws')
-			.to(this.id)
-			.emit(OutgoingEvents.PLAYER_LEAVES, { playerName: disconnectedPlayer.name } as PlayerLeavesOutgoingPayload);
+		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.PLAYER_LEAVES, { playerName: disconnectedPlayer.name, players: this.players.length } as PlayerLeavesOutgoingPayload);
 	}
 
 	public isSocketConnected(socketId: string) {
