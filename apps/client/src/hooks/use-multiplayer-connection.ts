@@ -9,6 +9,7 @@ import {
 import { IncomingEvents, OutgoingEvents } from '@/interfaces/mp-events.types';
 import { useMpStore } from '@/stores/mp-store';
 import { useNavigate } from 'react-router-dom';
+import { useVolatileMpStore } from '@/stores/mp-volatile-store';
 
 const connect = () => {
 	if (!socket.connected) {
@@ -27,23 +28,18 @@ const connectToExistingSession = (sessionId: string) => {
 export const useMultiplayerConnection = () => {
 	const [socketError, setSocketError] = useState<null | string>(null);
 	const { setSession, setPlayer } = useMpStore();
+	const { loadSession } = useVolatileMpStore()
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		connect();
 
-		const onSessionDetails = (
-			sessionPayload: SessionDetailsOutgoingPayload,
-			playerPayload: PlayerDetailsOutgoingPayload
-		) => {
+		const onSessionDetails = (sessionPayload: SessionDetailsOutgoingPayload, playerPayload: PlayerDetailsOutgoingPayload) => {
 			if (!sessionPayload || !playerPayload) return;
 
-			setSession({
-				sessionId: sessionPayload.sessionId,
-				sessionCurrentlyPlaying: sessionPayload.currentlyPlaying,
-				players: sessionPayload.players,
-			});
+			setSession({sessionId: sessionPayload.sessionId, players: sessionPayload.players});
 			setPlayer({ ...playerPayload, isHost: sessionPayload.host === playerPayload.playerName });
+			loadSession(false, sessionPayload.currentlyPlaying)
 
 			if (sessionPayload.host === playerPayload.playerName) {
 				//Joining as host from mp joining page

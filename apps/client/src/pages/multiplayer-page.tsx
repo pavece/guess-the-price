@@ -7,10 +7,12 @@ import { PlayerJoinsOutgoingPayload } from '@/interfaces/mp-payloads.types';
 import { OutgoingEvents } from '@/interfaces/mp-events.types';
 import { ShareSessionCard } from '@/components/multiplayer/share-session-card';
 import { useMultiplayerSession } from '@/hooks/use-multiplayer-session';
+import { useVolatileMpStore } from '@/stores/mp-volatile-store';
 
 export const MultiplayerPage = () => {
 	const { id } = useParams();
 	const mpStore = useMpStore();
+	const mpVolatileStore = useVolatileMpStore()
 
 	const { connectToExistingSession } = useMultiplayerConnection();
 	const { hostStartRound } = useMultiplayerSession();
@@ -29,7 +31,7 @@ export const MultiplayerPage = () => {
 		};
 
 		const onRoundStart = (payload: unknown) => {
-			mpStore.startRound();
+			mpVolatileStore.startRound();
 			console.log(payload);
 		};
 
@@ -49,7 +51,7 @@ export const MultiplayerPage = () => {
 				<p className='text-zinc-800'>Play the classic mode with your friends.</p>
 			</div>
 			<div>
-				{mpStore.sessionStatus.sessionStarted ? (
+				{mpVolatileStore.sessionStarted ? (
 					<div>Session started</div>
 				) : (
 					<div className='flex items-center justify-center'>
