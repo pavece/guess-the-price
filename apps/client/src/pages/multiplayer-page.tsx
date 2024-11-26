@@ -8,11 +8,13 @@ import { OutgoingEvents } from '@/interfaces/mp-events.types';
 import { ShareSessionCard } from '@/components/multiplayer/share-session-card';
 import { useMultiplayerSession } from '@/hooks/use-multiplayer-session';
 import { useVolatileMpStore } from '@/stores/mp-volatile-store';
+import { useMpNotifications } from '@/hooks/use-multiplayer-notification';
 
 export const MultiplayerPage = () => {
 	const { id } = useParams();
 	const mpStore = useMpStore();
-	const mpVolatileStore = useVolatileMpStore()
+	const mpVolatileStore = useVolatileMpStore();
+	useMpNotifications();
 
 	const { connectToExistingSession } = useMultiplayerConnection();
 	const { hostStartRound } = useMultiplayerSession();

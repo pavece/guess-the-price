@@ -58,7 +58,7 @@ export const gameSessionSocketHandler = (io: Server, socket: Socket) => {
 				socket.id
 			);
 
-			socket.emit(OutgoingEvents.SESSION_DETAILS, sessionDetails as SessionDetailsOutgoingPayload, { playerId: player.id, playerName: player.name } as PlayerDetailsOutgoingPayload);
+			socket.emit(OutgoingEvents.SESSION_DETAILS, {...sessionDetails, players} as SessionDetailsOutgoingPayload, { playerId: player.id, playerName: player.name, } as PlayerDetailsOutgoingPayload);
 			socket.join(payload.sessionId);
 
 			io.of('/mp-ws').to(payload.sessionId).emit(OutgoingEvents.PLAYER_RECONNECTS, { playerName: player.name, players } as PLayerReconnectsOutgoingPayload);

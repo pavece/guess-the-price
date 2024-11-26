@@ -39,7 +39,7 @@ export const ShareSessionCard = ({ isHost, sessionId, playerNumber, playerName, 
 
 					<CardContent>
 						<div className='flex items-center justify-center flex-col mb-5'>
-							<h1 className='text-2xl'>{playerNumber}</h1>
+							<h1 className='text-2xl'>{playerNumber ?? 1}</h1>
 							<p className='text-neutral-800'>Players in session</p>
 						</div>
 

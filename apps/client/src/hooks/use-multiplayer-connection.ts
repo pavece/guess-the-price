@@ -4,6 +4,7 @@ import {
 	ExceptionOutgoingPayload,
 	JoinSessionPayload,
 	PlayerDetailsOutgoingPayload,
+	ReconnectPayload,
 	SessionDetailsOutgoingPayload,
 } from '@/interfaces/mp-payloads.types';
 import { IncomingEvents, OutgoingEvents } from '@/interfaces/mp-events.types';
@@ -27,19 +28,25 @@ const connectToExistingSession = (sessionId: string) => {
 
 export const useMultiplayerConnection = () => {
 	const [socketError, setSocketError] = useState<null | string>(null);
-	const { setSession, setPlayer } = useMpStore();
-	const { loadSession } = useVolatileMpStore()
+	const { setSession, setPlayer, sessionId, playerId } = useMpStore();
+	const { loadSession } = useVolatileMpStore();
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		connect();
 
+		if (sessionId && playerId) {
+			socket.emit(IncomingEvents.PLAYER_RECONNECT, { playerId, sessionId } as ReconnectPayload);
+		}
+
 		const onSessionDetails = (sessionPayload: SessionDetailsOutgoingPayload, playerPayload: PlayerDetailsOutgoingPayload) => {
 			if (!sessionPayload || !playerPayload) return;
 
-			setSession({sessionId: sessionPayload.sessionId, players: sessionPayload.players});
+			console.log(sessionPayload)
+
+			setSession({ sessionId: sessionPayload.sessionId, players: sessionPayload.players });
 			setPlayer({ ...playerPayload, isHost: sessionPayload.host === playerPayload.playerName });
-			loadSession(false, sessionPayload.currentlyPlaying)
+			loadSession(false, sessionPayload.currentlyPlaying);
 
 			if (sessionPayload.host === playerPayload.playerName) {
 				//Joining as host from mp joining page
