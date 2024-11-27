@@ -18,35 +18,35 @@ const connect = () => {
 	}
 };
 
-const createSession = () => {
-	socket.emit(IncomingEvents.PLAYER_JOIN_SESSION, {});
-};
-
-const connectToExistingSession = (sessionId: string) => {
-	socket.emit(IncomingEvents.PLAYER_JOIN_SESSION, { sessionId } as JoinSessionPayload);
-};
 
 export const useMultiplayerConnection = () => {
 	const [socketError, setSocketError] = useState<null | string>(null);
 	const { setSession, setPlayer, sessionId, playerId } = useMpStore();
-	const { loadSession } = useVolatileMpStore();
+	const { loadSession, setConnected, connectedToSession } = useVolatileMpStore();
 	const navigate = useNavigate();
+
+	const createSession = () => {
+		if(!connectedToSession){
+			socket.emit(IncomingEvents.PLAYER_JOIN_SESSION, {});
+		}
+	};
+
+	const connectToExistingSession = (sessionId: string) => {
+		if(!connectedToSession){
+			socket.emit(IncomingEvents.PLAYER_JOIN_SESSION, { sessionId } as JoinSessionPayload);
+		}
+	};
 
 	useEffect(() => {
 		connect();
-
-		if (sessionId && playerId) {
-			socket.emit(IncomingEvents.PLAYER_RECONNECT, { playerId, sessionId } as ReconnectPayload);
-		}
-
-		const onSessionDetails = (sessionPayload: SessionDetailsOutgoingPayload, playerPayload: PlayerDetailsOutgoingPayload) => {
+		
+		const onSessionDetails = (sessionPayload: SessionDetailsOutgoingPayload, playerPayload: PlayerDetailsOutgoingPayload ) => {
 			if (!sessionPayload || !playerPayload) return;
-
-			console.log(sessionPayload)
 
 			setSession({ sessionId: sessionPayload.sessionId, players: sessionPayload.players });
 			setPlayer({ ...playerPayload, isHost: sessionPayload.host === playerPayload.playerName });
 			loadSession(false, sessionPayload.currentlyPlaying);
+			setConnected(true);
 
 			if (sessionPayload.host === playerPayload.playerName) {
 				//Joining as host from mp joining page
@@ -62,14 +62,30 @@ export const useMultiplayerConnection = () => {
 			}
 		};
 
+		const onSocketDisconnect = () => {
+			console.log("Socket disconnected")
+			setConnected(false);
+		};
+
+		const onSocketConnect = () => {
+			//Try to reconnect if you were in a session and socket lost connection to server
+			if (!connectedToSession && socket.connected && sessionId && playerId) {
+				socket.emit(IncomingEvents.PLAYER_RECONNECT, { playerId, sessionId } as ReconnectPayload);
+			}
+		};
+
 		socket.on(OutgoingEvents.SESSION_DETAILS, onSessionDetails);
 		socket.on(OutgoingEvents.EXCEPTION, onSocketError);
+		socket.on('disconnect', onSocketDisconnect);
+		socket.on('connect', onSocketConnect);
 
 		return () => {
 			socket.off(OutgoingEvents.SESSION_DETAILS, onSessionDetails);
 			socket.off(OutgoingEvents.EXCEPTION, onSocketError);
+			socket.off('disconnect', onSocketDisconnect);
+			socket.off('connect', onSocketConnect);
 		};
-	}, []);
+	});
 
 	return {
 		socketError,
