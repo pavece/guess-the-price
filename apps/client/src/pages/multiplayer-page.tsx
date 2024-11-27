@@ -9,6 +9,7 @@ import { ShareSessionCard } from '@/components/multiplayer/share-session-card';
 import { useMultiplayerSession } from '@/hooks/use-multiplayer-session';
 import { useVolatileMpStore } from '@/stores/mp-volatile-store';
 import { useMpNotifications } from '@/hooks/use-multiplayer-notification';
+import { ProductCard } from '@/components/classic-mode/product-card';
 
 export const MultiplayerPage = () => {
 	const { id } = useParams();
@@ -27,22 +28,14 @@ export const MultiplayerPage = () => {
 
 	useEffect(() => {
 		const playerJoinsSession = (payload: PlayerJoinsOutgoingPayload) => {
-			console.log(payload);
 			if (payload.playerName === mpStore.playerName) return;
 			mpStore.setPlayers(payload.players);
 		};
 
-		const onRoundStart = (payload: unknown) => {
-			mpVolatileStore.startRound();
-			console.log(payload);
-		};
-
 		socket.on(OutgoingEvents.PLAYER_JOINS_SESSION, playerJoinsSession);
-		socket.on(OutgoingEvents.ROUND_STARTS, onRoundStart);
 
 		return () => {
 			socket.off(OutgoingEvents.PLAYER_JOINS_SESSION, playerJoinsSession);
-			socket.off(OutgoingEvents.ROUND_STARTS, onRoundStart);
 		};
 	}, []);
 
@@ -53,9 +46,7 @@ export const MultiplayerPage = () => {
 				<p className='text-zinc-800'>Play the classic mode with your friends.</p>
 			</div>
 			<div>
-				{mpVolatileStore.sessionStarted ? (
-					<div>Session started</div>
-				) : (
+				{!mpVolatileStore.sessionStarted && (
 					<div className='flex items-center justify-center'>
 						<ShareSessionCard
 							isHost={mpStore.isHost}
@@ -63,6 +54,17 @@ export const MultiplayerPage = () => {
 							sessionId={mpStore.sessionId}
 							playerNumber={mpStore.players}
 							onStart={hostStartRound}
+						/>
+					</div>
+				)}
+
+				{mpVolatileStore.currentlyPlaying && mpStore.roundData.product && (
+					<div>
+						<ProductCard
+							image={mpStore.roundData.product?.image}
+							priceInfo={mpStore.roundData.product?.priceMessage ?? ''}
+							source={mpStore.roundData.product?.source ?? ''}
+							title={mpStore.roundData.product?.name}
 						/>
 					</div>
 				)}

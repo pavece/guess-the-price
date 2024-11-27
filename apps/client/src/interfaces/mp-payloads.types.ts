@@ -1,5 +1,7 @@
 //Incoming payloads
 
+import { RandomProduct } from "./product.interface copy";
+
 export type RequiredPlayerId = {
 	playerId: string;
 };
@@ -56,11 +58,11 @@ export interface ExceptionOutgoingPayload {
 
 //TODO: Move needed interfaces
 
-// export interface RoundStartsOutgoingPayload {
-// 	product: RandomProduct;
-// 	startTime: Date;
-// 	seconds: number;
-// }
+export interface RoundStartsOutgoingPayload {
+	product: RandomProduct;
+	startTime: Date;
+	seconds: number;
+}
 
 export interface PlayerGuessOutgoingPayload {
 	currentGuesses?: number;

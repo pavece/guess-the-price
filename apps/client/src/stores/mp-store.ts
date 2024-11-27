@@ -1,5 +1,6 @@
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { create } from 'zustand';
+import { RandomProduct } from '@/interfaces/product.interface copy';
 
 export interface PlayerDetails {
 	playerId: string;
@@ -12,10 +13,16 @@ export interface SessionDetails {
 	players: number;
 }
 
+export interface RoundData {
+	product: RandomProduct | null;
+}
+
 interface MpState extends PlayerDetails, SessionDetails {
+	roundData: RoundData;
 	setSession: (details: SessionDetails) => void;
 	setPlayer: (details: PlayerDetails) => void;
 	setPlayers: (players: number) => void;
+	loadRoundProduct: (product: RandomProduct) => void;
 }
 
 export const useMpStore = create<MpState>()(
@@ -29,10 +36,14 @@ export const useMpStore = create<MpState>()(
 			sessionStatus: {
 				sessionStarted: false,
 			},
+			roundData: {
+				product: null,
+			},
 
 			setSession: (details: SessionDetails) => set(() => ({ ...details })),
 			setPlayer: (details: PlayerDetails) => set(() => ({ ...details })),
 			setPlayers: (players: number) => set(() => ({ players })),
+			loadRoundProduct: (product: RandomProduct) => set(() => ({ roundData: { product } })),
 		}),
 		{
 			name: 'multiplayer',
