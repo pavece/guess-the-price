@@ -10,6 +10,8 @@ import { useMultiplayerSession } from '@/hooks/use-multiplayer-session';
 import { useVolatileMpStore } from '@/stores/mp-volatile-store';
 import { useMpNotifications } from '@/hooks/use-multiplayer-notification';
 import { ProductCard } from '@/components/classic-mode/product-card';
+import { GuessCard } from '@/components/classic-mode/guess-card';
+import { Button } from '@/components/ui/button';
 
 export const MultiplayerPage = () => {
 	const { id } = useParams();
@@ -18,7 +20,7 @@ export const MultiplayerPage = () => {
 	useMpNotifications();
 
 	const { connectToExistingSession } = useMultiplayerConnection();
-	const { hostStartRound } = useMultiplayerSession();
+	const { hostStartRound, guessPrice } = useMultiplayerSession();
 
 	useEffect(() => {
 		if (id && !mpStore.playerId && !mpStore.sessionId) {
@@ -58,15 +60,30 @@ export const MultiplayerPage = () => {
 					</div>
 				)}
 
-				{mpVolatileStore.currentlyPlaying && mpStore.roundData.product && (
-					<div>
+				{mpVolatileStore.currentlyPlaying && mpStore.roundData.product && !mpVolatileStore.waitingForResults && (
+					<div className='flex'>
 						<ProductCard
 							image={mpStore.roundData.product?.image}
 							priceInfo={mpStore.roundData.product?.priceMessage ?? ''}
 							source={mpStore.roundData.product?.source ?? ''}
 							title={mpStore.roundData.product?.name}
 						/>
+						<GuessCard onGuess={guessPrice} />
 					</div>
+				)}
+
+				{mpVolatileStore.waitingForResults && (
+					<>
+						<div>Waiting for results: {mpVolatileStore.playersLeft}</div>
+					</>
+				)}
+
+				{mpVolatileStore.showingRoundResults && (
+					<>
+						<div>Showing round results...</div>
+						
+						<Button onClick={hostStartRound}>next round</Button>
+					</>
 				)}
 			</div>
 		</div>
