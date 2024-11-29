@@ -12,6 +12,7 @@ import { useMpNotifications } from '@/hooks/use-multiplayer-notification';
 import { ProductCard } from '@/components/classic-mode/product-card';
 import { GuessCard } from '@/components/classic-mode/guess-card';
 import { Button } from '@/components/ui/button';
+import { RoundTimer } from '@/components/this-that/round-timer';
 
 export const MultiplayerPage = () => {
 	const { id } = useParams();
@@ -44,8 +45,10 @@ export const MultiplayerPage = () => {
 	return (
 		<div>
 			<div className='mb-10'>
-				<h1 className='font-semibold text-3xl'>Multiplayer</h1>
-				<p className='text-zinc-800'>Play the classic mode with your friends.</p>
+				<div>
+					<h1 className='font-semibold text-3xl'>Multiplayer</h1>
+					<p className='text-zinc-800'>Play the classic mode with your friends.</p>
+				</div>
 			</div>
 			<div>
 				{!mpVolatileStore.sessionStarted && (
@@ -63,7 +66,7 @@ export const MultiplayerPage = () => {
 				{mpVolatileStore.currentlyPlaying &&
 					mpVolatileStore.roundData.product &&
 					!mpVolatileStore.waitingForResults && (
-						<div className='flex'>
+						<div className='flex gap-6'>
 							<ProductCard
 								image={mpVolatileStore.roundData.product?.image}
 								priceInfo={mpVolatileStore.roundData.product?.priceMessage ?? ''}
@@ -89,6 +92,13 @@ export const MultiplayerPage = () => {
 						<Button onClick={hostStartRound}>next round</Button>
 					</>
 				)}
+
+				<div className='w-full flex items-center justify-center'>
+					<div className='bg-white p-4 border rounded-md mt-10 max-w-fit flex flex-row gap-6'>
+						{mpVolatileStore.currentlyPlaying && <RoundTimer />}
+						<Button variant='destructive'>Leave session</Button>
+					</div>
+				</div>
 			</div>
 		</div>
 	);

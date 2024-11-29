@@ -61,6 +61,7 @@ export interface RoundStartsOutgoingPayload {
 	product: RandomProduct;
 	startTime: Date;
 	seconds: number;
+	endTime: number;
 }
 
 export interface PlayerGuessOutgoingPayload {

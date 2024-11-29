@@ -25,7 +25,7 @@ export const useMultiplayerSession = () => {
 
 	useEffect(() => {
 		const onRoundStart = (payload: RoundStartsOutgoingPayload) => {
-			mpVolatileStore.startRound(payload.product);
+			mpVolatileStore.startRound(payload.product, payload.endTime);
 		};
 
 		const onRoundEnd = (payload: RoundResultsOutgoingPayload) => {

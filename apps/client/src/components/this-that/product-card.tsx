@@ -1,12 +1,12 @@
 import { CaretDoubleUp } from '@phosphor-icons/react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardFooter } from '../ui/card';
-import { Product } from '@/interfaces/product.interface';
 import CountUp from 'react-countup';
 import { Image } from '../ui/image';
+import { RandomProduct } from '@/interfaces/product.interface';
 
 interface Props {
-	product: Product;
+	product: RandomProduct;
 	showingResult: boolean;
 	animate?: boolean;
 	onSelect: () => void;

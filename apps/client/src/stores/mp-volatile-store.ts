@@ -13,10 +13,11 @@ interface VolatileMpStore {
 	playersLeft: number;
 	roundData: {
 		product: RandomProduct | null;
+		endTime: number;
 		results: PlayerRoundResultsRecord[] | null;
 	};
 
-	startRound: (randomProduct: RandomProduct) => void;
+	startRound: (randomProduct: RandomProduct, endTime: number) => void;
 	endRound: (playerResults: PlayerRoundResultsRecord[]) => void;
 	reset: () => void;
 	loadSession: (sessionStarted: boolean, currentlyPlaying: boolean) => void;
@@ -36,10 +37,11 @@ export const useVolatileMpStore = create<VolatileMpStore>()(set => ({
 	playersLeft: 0,
 	roundData: {
 		product: null,
+		endTime: 0,
 		results: null,
 	},
 
-	startRound: (randomProduct: RandomProduct) =>
+	startRound: (randomProduct: RandomProduct, endTime: number) =>
 		set(() => ({
 			sessionStarted: true,
 			currentlyPlaying: true,
@@ -47,6 +49,7 @@ export const useVolatileMpStore = create<VolatileMpStore>()(set => ({
 			showingSessionResults: false,
 			roundData: {
 				product: randomProduct,
+				endTime,
 				results: null,
 			},
 		})),
