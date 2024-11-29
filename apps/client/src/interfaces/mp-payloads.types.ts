@@ -1,6 +1,7 @@
 //Incoming payloads
 
-import { RandomProduct } from "./product.interface copy";
+import { PlayerRoundResultsRecord, PlayerSessionResultsRecord } from './mp.interfaces';
+import { RandomProduct } from './product.interface';
 
 export type RequiredPlayerId = {
 	playerId: string;
@@ -56,8 +57,6 @@ export interface ExceptionOutgoingPayload {
 	msg: string;
 }
 
-//TODO: Move needed interfaces
-
 export interface RoundStartsOutgoingPayload {
 	product: RandomProduct;
 	startTime: Date;
@@ -69,11 +68,12 @@ export interface PlayerGuessOutgoingPayload {
 	players: number;
 }
 
-// export interface SessionResultsOutgoingPayload {
-// 	roundsPlayed: number;
-// 	playerResults: PlayerSessionResultsRecord[];
-// }
+export interface SessionResultsOutgoingPayload {
+	roundsPlayed: number;
+	playerResults: PlayerSessionResultsRecord[];
+}
 
-// export interface RoundResultsOutgoingPayload {
-// 	product: RandomProduct;
-// }
+export interface RoundResultsOutgoingPayload {
+	product: RandomProduct;
+	playerResults: PlayerRoundResultsRecord[]
+}

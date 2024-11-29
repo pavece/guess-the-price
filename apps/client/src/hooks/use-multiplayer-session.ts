@@ -1,5 +1,5 @@
 import { IncomingEvents, OutgoingEvents } from '@/interfaces/mp-events.types';
-import { PlayerGuessOutgoingPayload, StartRoundPayload } from '@/interfaces/mp-payloads.types';
+import { PlayerGuessOutgoingPayload, RoundResultsOutgoingPayload, StartRoundPayload } from '@/interfaces/mp-payloads.types';
 import { socket } from '@/socket';
 import { useMpStore } from '@/stores/mp-store';
 import { useVolatileMpStore } from '@/stores/mp-volatile-store';
@@ -13,12 +13,11 @@ export const useMultiplayerSession = () => {
 	const hostStartRound = () => {
 		if (mpStore.isHost) {
 			socket.emit(IncomingEvents.HOST_STARTS_ROUND, { playerId: mpStore.playerId } as StartRoundPayload);
-			mpVolatileStore.startRound();
 		}
 	};
 
 	const guessPrice = (guessedPrice: number) => {
-		if (mpVolatileStore.currentlyPlaying && mpStore.roundData.product) {
+		if (mpVolatileStore.currentlyPlaying && mpVolatileStore.roundData.product) {
 			socket.emit(IncomingEvents.PLAYER_GUESS_PRICE, { guessedPrice, playerId: mpStore.playerId } as GuessPricePayload);
 			mpVolatileStore.guessPrice(guessedPrice);
 		}
@@ -26,13 +25,11 @@ export const useMultiplayerSession = () => {
 
 	useEffect(() => {
 		const onRoundStart = (payload: RoundStartsOutgoingPayload) => {
-			mpStore.loadRoundProduct(payload.product);
-			mpVolatileStore.startRound();
+			mpVolatileStore.startRound(payload.product);
 		};
 
-		const onRoundEnd = (payload: unknown) => {
-			console.log(payload);
-			mpVolatileStore.endRound();
+		const onRoundEnd = (payload: RoundResultsOutgoingPayload) => {
+			mpVolatileStore.endRound(payload.playerResults);
 		};
 
 		const onPlayerGuess = (payload: PlayerGuessOutgoingPayload) => {

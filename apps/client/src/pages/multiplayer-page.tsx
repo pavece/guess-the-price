@@ -60,17 +60,19 @@ export const MultiplayerPage = () => {
 					</div>
 				)}
 
-				{mpVolatileStore.currentlyPlaying && mpStore.roundData.product && !mpVolatileStore.waitingForResults && (
-					<div className='flex'>
-						<ProductCard
-							image={mpStore.roundData.product?.image}
-							priceInfo={mpStore.roundData.product?.priceMessage ?? ''}
-							source={mpStore.roundData.product?.source ?? ''}
-							title={mpStore.roundData.product?.name}
-						/>
-						<GuessCard onGuess={guessPrice} />
-					</div>
-				)}
+				{mpVolatileStore.currentlyPlaying &&
+					mpVolatileStore.roundData.product &&
+					!mpVolatileStore.waitingForResults && (
+						<div className='flex'>
+							<ProductCard
+								image={mpVolatileStore.roundData.product?.image}
+								priceInfo={mpVolatileStore.roundData.product?.priceMessage ?? ''}
+								source={mpVolatileStore.roundData.product?.source ?? ''}
+								title={mpVolatileStore.roundData.product?.name}
+							/>
+							<GuessCard onGuess={guessPrice} />
+						</div>
+					)}
 
 				{mpVolatileStore.waitingForResults && (
 					<>
@@ -81,7 +83,9 @@ export const MultiplayerPage = () => {
 				{mpVolatileStore.showingRoundResults && (
 					<>
 						<div>Showing round results...</div>
-						
+
+						<div>{JSON.stringify(mpVolatileStore.roundData.results)}</div>
+
 						<Button onClick={hostStartRound}>next round</Button>
 					</>
 				)}

@@ -1,14 +1,21 @@
 export interface Product {
-	id: string;
 	name: string;
-	description: null;
 	image: string;
-	source: null;
-	priceMessage: string;
-	category: Category;
 	price: number;
+	priceDescription?: string | null;
+	description?: string | null;
+	source?: string | null;
 }
 
-export interface Category {
+export interface RandomProduct {
+	id: string;
 	name: string;
+	description: string | null;
+	image: string;
+	source: string | null;
+	price: number;
+	priceMessage: string | null;
+	category: {
+		name: string;
+	} | null;
 }

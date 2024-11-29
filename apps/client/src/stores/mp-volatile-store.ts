@@ -1,3 +1,5 @@
+import { PlayerRoundResultsRecord } from '@/interfaces/mp.interfaces';
+import { RandomProduct } from '@/interfaces/product.interface';
 import { create } from 'zustand';
 
 interface VolatileMpStore {
@@ -9,14 +11,18 @@ interface VolatileMpStore {
 	waitingForResults: boolean;
 	guessedPrice: number;
 	playersLeft: number;
+	roundData: {
+		product: RandomProduct | null;
+		results: PlayerRoundResultsRecord[] | null;
+	};
 
-	startRound: () => void;
-	endRound: () => void;
+	startRound: (randomProduct: RandomProduct) => void;
+	endRound: (playerResults: PlayerRoundResultsRecord[]) => void;
 	reset: () => void;
 	loadSession: (sessionStarted: boolean, currentlyPlaying: boolean) => void;
 	setConnected: (connected: boolean) => void;
 	guessPrice: (price: number) => void;
-	updatePlayersLeft: (left: number) => void
+	updatePlayersLeft: (left: number) => void;
 }
 
 export const useVolatileMpStore = create<VolatileMpStore>()(set => ({
@@ -28,18 +34,32 @@ export const useVolatileMpStore = create<VolatileMpStore>()(set => ({
 	waitingForResults: false,
 	guessedPrice: 0,
 	playersLeft: 0,
+	roundData: {
+		product: null,
+		results: null,
+	},
 
-	startRound: () =>
+	startRound: (randomProduct: RandomProduct) =>
 		set(() => ({
 			sessionStarted: true,
 			currentlyPlaying: true,
 			showingRoundResults: false,
 			showingSessionResults: false,
+			roundData: {
+				product: randomProduct,
+				results: null,
+			},
 		})),
-	endRound: () => set(() => ({ currentlyPlaying: false, showingRoundResults: true, waitingForResults: false })),
+	endRound: (results: PlayerRoundResultsRecord[]) =>
+		set(state => ({
+			currentlyPlaying: false,
+			showingRoundResults: true,
+			waitingForResults: false,
+			roundData: { ...state.roundData, results },
+		})),
 	reset: () => set(() => ({ sessionStarted: false, currentlyPlaying: false })),
 	loadSession: (sessionStarted: boolean, currentlyPlaying: boolean) => set(() => ({ sessionStarted, currentlyPlaying })),
 	setConnected: (connected: boolean) => set(() => ({ connectedToSession: connected })),
-	guessPrice: (price: number) => set(() => ({ waitingForResults: true, guessedPrice: price  })),
-	updatePlayersLeft: (left: number) => set(() => ({playersLeft: left}))
+	guessPrice: (price: number) => set(() => ({ waitingForResults: true, guessedPrice: price })),
+	updatePlayersLeft: (left: number) => set(() => ({ playersLeft: left })),
 }));
