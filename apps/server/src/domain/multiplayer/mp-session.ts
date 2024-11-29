@@ -125,7 +125,10 @@ export class MpSession {
 			guesses: [],
 		};
 		this.refreshActivity();
-		return this.currentRound;
+		return {
+			...this.currentRound,
+			endTime: new Date().setSeconds(this.currentRound.startTime.getSeconds() + Number(process.env.MP_SESSION_ROUND_DURATION_SECONDS ?? 30)),
+		};
 	}
 
 	public async guessPrice(playerId: string, points: number, guessedPrice: number) {
