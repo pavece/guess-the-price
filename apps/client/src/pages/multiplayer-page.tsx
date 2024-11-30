@@ -15,6 +15,7 @@ import { useMultiplayerSession } from '@/hooks/use-multiplayer-session';
 import { useParams } from 'react-router-dom';
 import { useVolatileMpStore } from '@/stores/mp-volatile-store';
 import { WaitingForResultsCard } from '@/components/multiplayer/waiting-for-results-card';
+import { RoundResultsCard } from '@/components/multiplayer/round-results-card';
 
 export const MultiplayerPage = () => {
 	const { id } = useParams();
@@ -99,11 +100,24 @@ export const MultiplayerPage = () => {
 
 				{mpVolatileStore.showingRoundResults && (
 					<>
-						<div>Showing round results...</div>
-
-						<div>{JSON.stringify(mpVolatileStore.roundData.results)}</div>
-
-						<Button onClick={hostStartRound}>next round</Button>
+						<div className='flex gap-6'>
+							<ProductCard
+								image={mpVolatileStore.roundData.product?.image ?? ''}
+								priceInfo={mpVolatileStore.roundData.product?.priceMessage ?? ''}
+								source={mpVolatileStore.roundData.product?.source ?? ''}
+								title={mpVolatileStore.roundData.product?.name ?? ''}
+								price={mpVolatileStore.roundData.product?.price ?? 0}
+							/>
+							<div className='flex-1'>
+								<RoundResultsCard
+									isHost={mpStore.isHost}
+									results={mpVolatileStore.roundData.results ?? []}
+									playerName={mpStore.playerName}
+									onEndSession={() => {}}
+									onNextRound={hostStartRound}
+								/>
+							</div>
+						</div>
 					</>
 				)}
 			</div>
