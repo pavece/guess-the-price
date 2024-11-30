@@ -18,29 +18,37 @@ const connect = () => {
 	}
 };
 
-
 export const useMultiplayerConnection = () => {
 	const [socketError, setSocketError] = useState<null | string>(null);
-	const { setSession, setPlayer, sessionId, playerId } = useMpStore();
+	const { setSession, setPlayer, clear, sessionId, playerId } = useMpStore();
 	const { loadSession, setConnected, connectedToSession } = useVolatileMpStore();
 	const navigate = useNavigate();
 
 	const createSession = () => {
-		if(!connectedToSession){
+		if (!connectedToSession) {
 			socket.emit(IncomingEvents.PLAYER_JOIN_SESSION, {});
 		}
 	};
 
 	const connectToExistingSession = (sessionId: string) => {
-		if(!connectedToSession){
+		if (!connectedToSession) {
 			socket.emit(IncomingEvents.PLAYER_JOIN_SESSION, { sessionId } as JoinSessionPayload);
 		}
 	};
 
+	const leaveSession = () => {
+		clear();
+		navigate('/');
+		socket.disconnect();
+	};
+
 	useEffect(() => {
 		connect();
-		
-		const onSessionDetails = (sessionPayload: SessionDetailsOutgoingPayload, playerPayload: PlayerDetailsOutgoingPayload ) => {
+
+		const onSessionDetails = (
+			sessionPayload: SessionDetailsOutgoingPayload,
+			playerPayload: PlayerDetailsOutgoingPayload
+		) => {
 			if (!sessionPayload || !playerPayload) return;
 
 			setSession({ sessionId: sessionPayload.sessionId, players: sessionPayload.players });
@@ -63,7 +71,7 @@ export const useMultiplayerConnection = () => {
 		};
 
 		const onSocketDisconnect = () => {
-			console.log("Socket disconnected")
+			console.log('Socket disconnected');
 			setConnected(false);
 		};
 
@@ -91,5 +99,6 @@ export const useMultiplayerConnection = () => {
 		socketError,
 		createSession,
 		connectToExistingSession,
+		leaveSession,
 	};
 };

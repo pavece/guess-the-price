@@ -1,20 +1,20 @@
-import { useParams } from 'react-router-dom';
-import { useMultiplayerConnection } from '@/hooks/use-multiplayer-connection';
-import { useMpStore } from '@/stores/mp-store';
-import { useEffect } from 'react';
-import { socket } from '@/socket';
-import { PlayerJoinsOutgoingPayload } from '@/interfaces/mp-payloads.types';
-import { OutgoingEvents } from '@/interfaces/mp-events.types';
-import { ShareSessionCard } from '@/components/multiplayer/share-session-card';
-import { useMultiplayerSession } from '@/hooks/use-multiplayer-session';
-import { useVolatileMpStore } from '@/stores/mp-volatile-store';
-import { useMpNotifications } from '@/hooks/use-multiplayer-notification';
-import { ProductCard } from '@/components/classic-mode/product-card';
-import { GuessCard } from '@/components/classic-mode/guess-card';
 import { Button } from '@/components/ui/button';
+import { GuessCard } from '@/components/classic-mode/guess-card';
+import { OutgoingEvents } from '@/interfaces/mp-events.types';
+import { PlayerJoinsOutgoingPayload } from '@/interfaces/mp-payloads.types';
+import { ProductCard } from '@/components/classic-mode/product-card';
 import { RoundTimer } from '@/components/multiplayer/round-timer';
-import { WaitingForResultsCard } from '@/components/multiplayer/waiting-for-results-card';
+import { ShareSessionCard } from '@/components/multiplayer/share-session-card';
 import { SignOut } from '@phosphor-icons/react';
+import { socket } from '@/socket';
+import { useEffect } from 'react';
+import { useMpNotifications } from '@/hooks/use-multiplayer-notification';
+import { useMpStore } from '@/stores/mp-store';
+import { useMultiplayerConnection } from '@/hooks/use-multiplayer-connection';
+import { useMultiplayerSession } from '@/hooks/use-multiplayer-session';
+import { useParams } from 'react-router-dom';
+import { useVolatileMpStore } from '@/stores/mp-volatile-store';
+import { WaitingForResultsCard } from '@/components/multiplayer/waiting-for-results-card';
 
 export const MultiplayerPage = () => {
 	const { id } = useParams();
@@ -22,7 +22,7 @@ export const MultiplayerPage = () => {
 	const mpVolatileStore = useVolatileMpStore();
 	useMpNotifications();
 
-	const { connectToExistingSession } = useMultiplayerConnection();
+	const { connectToExistingSession, leaveSession } = useMultiplayerConnection();
 	const { hostStartRound, guessPrice } = useMultiplayerSession();
 
 	useEffect(() => {
@@ -53,11 +53,12 @@ export const MultiplayerPage = () => {
 				</div>
 
 				<div>
-					<Button variant='destructive'>
+					<Button variant='destructive' onClick={leaveSession}>
 						<SignOut size={24} /> Leave session
 					</Button>
 				</div>
 			</div>
+
 			<div>
 				{!mpVolatileStore.sessionStarted && (
 					<div className='flex items-center justify-center'>

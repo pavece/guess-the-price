@@ -12,11 +12,11 @@ export interface SessionDetails {
 	players: number;
 }
 
-
 interface MpState extends PlayerDetails, SessionDetails {
 	setSession: (details: SessionDetails) => void;
 	setPlayer: (details: PlayerDetails) => void;
 	setPlayers: (players: number) => void;
+	clear: () => void;
 }
 
 export const useMpStore = create<MpState>()(
@@ -34,6 +34,17 @@ export const useMpStore = create<MpState>()(
 			setSession: (details: SessionDetails) => set(() => ({ ...details })),
 			setPlayer: (details: PlayerDetails) => set(() => ({ ...details })),
 			setPlayers: (players: number) => set(() => ({ players })),
+			clear: () =>
+				set(() => ({
+					sessionId: '',
+					playerId: '',
+					playerName: '',
+					isHost: false,
+					players: 0,
+					sessionStatus: {
+						sessionStarted: false,
+					},
+				})),
 		}),
 		{
 			name: 'multiplayer',
