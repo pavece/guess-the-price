@@ -1,7 +1,7 @@
 import { ProductCard } from '@/components/this-that/product-card';
 import { ResultsCard } from '@/components/this-that/results-card';
 import { Loading } from '@/components/ui/loading';
-import { Product } from '@/interfaces/product.interface';
+import { RandomProduct } from '@/interfaces/product.interface';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useAnimate } from 'framer-motion';
 
@@ -14,7 +14,7 @@ const getProducts = async (current?: string) => {
 };
 
 export const ThisOrThatPage = () => {
-	const [products, setProducts] = useState<{ selectedProduct: Product; newProduct: Product } | null>(null);
+	const [products, setProducts] = useState<{ selectedProduct: RandomProduct; newProduct: RandomProduct } | null>(null);
 	const [playing, setPlaying] = useState(true);
 	const [guesses, setGuesses] = useState(0);
 	const [showingResult, setShowingResult] = useState(false);
@@ -39,7 +39,7 @@ export const ThisOrThatPage = () => {
 		});
 	};
 
-	const selectProduct = async (selected: Product) => {
+	const selectProduct = async (selected: RandomProduct) => {
 		if (showingResult) return;
 
 		setShowingResult(true);

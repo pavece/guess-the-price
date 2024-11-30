@@ -12,7 +12,9 @@ import { useMpNotifications } from '@/hooks/use-multiplayer-notification';
 import { ProductCard } from '@/components/classic-mode/product-card';
 import { GuessCard } from '@/components/classic-mode/guess-card';
 import { Button } from '@/components/ui/button';
-import { RoundTimer } from '@/components/this-that/round-timer';
+import { RoundTimer } from '@/components/multiplayer/round-timer';
+import { WaitingForResultsCard } from '@/components/multiplayer/waiting-for-results-card';
+import { SignOut } from '@phosphor-icons/react';
 
 export const MultiplayerPage = () => {
 	const { id } = useParams();
@@ -44,10 +46,16 @@ export const MultiplayerPage = () => {
 
 	return (
 		<div>
-			<div className='mb-10'>
+			<div className='mb-10 flex justify-between items-end'>
 				<div>
 					<h1 className='font-semibold text-3xl'>Multiplayer</h1>
 					<p className='text-zinc-800'>Play the classic mode with your friends.</p>
+				</div>
+
+				<div>
+					<Button variant='destructive'>
+						<SignOut size={24} /> Leave session
+					</Button>
 				</div>
 			</div>
 			<div>
@@ -73,14 +81,19 @@ export const MultiplayerPage = () => {
 								source={mpVolatileStore.roundData.product?.source ?? ''}
 								title={mpVolatileStore.roundData.product?.name}
 							/>
-							<GuessCard onGuess={guessPrice} />
+							<div className='flex-1'>
+								<GuessCard onGuess={guessPrice} />
+								<div className='p-4 bg-white border rounded-md mt-4 w-full'>
+									<RoundTimer />
+								</div>
+							</div>
 						</div>
 					)}
 
 				{mpVolatileStore.waitingForResults && (
-					<>
-						<div>Waiting for results: {mpVolatileStore.playersLeft}</div>
-					</>
+					<div className='w-full flex items-center justify-center'>
+						<WaitingForResultsCard />
+					</div>
 				)}
 
 				{mpVolatileStore.showingRoundResults && (
@@ -92,13 +105,6 @@ export const MultiplayerPage = () => {
 						<Button onClick={hostStartRound}>next round</Button>
 					</>
 				)}
-
-				<div className='w-full flex items-center justify-center'>
-					<div className='bg-white p-4 border rounded-md mt-10 max-w-fit flex flex-row gap-6'>
-						{mpVolatileStore.currentlyPlaying && <RoundTimer />}
-						<Button variant='destructive'>Leave session</Button>
-					</div>
-				</div>
 			</div>
 		</div>
 	);
