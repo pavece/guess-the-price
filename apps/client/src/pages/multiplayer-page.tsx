@@ -16,6 +16,7 @@ import { useParams } from 'react-router-dom';
 import { useVolatileMpStore } from '@/stores/mp-volatile-store';
 import { WaitingForResultsCard } from '@/components/multiplayer/waiting-for-results-card';
 import { RoundResultsCard } from '@/components/multiplayer/round-results-card';
+import { SessionResultsCard } from '@/components/multiplayer/session-results-card';
 
 export const MultiplayerPage = () => {
 	const { id } = useParams();
@@ -24,7 +25,7 @@ export const MultiplayerPage = () => {
 	useMpNotifications();
 
 	const { connectToExistingSession, leaveSession } = useMultiplayerConnection();
-	const { hostStartRound, guessPrice } = useMultiplayerSession();
+	const { hostStartRound, hostEndSession, guessPrice } = useMultiplayerSession();
 
 	useEffect(() => {
 		if (id && !mpStore.playerId && !mpStore.sessionId) {
@@ -113,12 +114,20 @@ export const MultiplayerPage = () => {
 									isHost={mpStore.isHost}
 									results={mpVolatileStore.roundData.results ?? []}
 									playerName={mpStore.playerName}
-									onEndSession={() => {}}
+									onEndSession={hostEndSession}
 									onNextRound={hostStartRound}
 								/>
 							</div>
 						</div>
 					</>
+				)}
+
+				{mpVolatileStore.showingSessionResults && (
+					<SessionResultsCard
+						results={mpVolatileStore.sessionData.sessionResults ?? []}
+						roundsPlayed={mpVolatileStore.sessionData.roundsPlayed}
+						isHost={mpStore.isHost}
+					/>
 				)}
 			</div>
 		</div>

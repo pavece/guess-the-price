@@ -1,4 +1,4 @@
-import { PlayerRoundResultsRecord } from '@/interfaces/mp.interfaces';
+import { PlayerRoundResultsRecord, PlayerSessionResultsRecord } from '@/interfaces/mp.interfaces';
 import { RandomProduct } from '@/interfaces/product.interface';
 import { create } from 'zustand';
 
@@ -16,6 +16,10 @@ interface VolatileMpStore {
 		endTime: number;
 		results: PlayerRoundResultsRecord[] | null;
 	};
+	sessionData: {
+		sessionResults: null | PlayerSessionResultsRecord[];
+		roundsPlayed: number;
+	};
 
 	startRound: (randomProduct: RandomProduct, endTime: number) => void;
 	endRound: (playerResults: PlayerRoundResultsRecord[]) => void;
@@ -24,6 +28,7 @@ interface VolatileMpStore {
 	setConnected: (connected: boolean) => void;
 	guessPrice: (price: number) => void;
 	updatePlayersLeft: (left: number) => void;
+	endSession: (results: PlayerSessionResultsRecord[], roundsPlayed: number) => void;
 }
 
 export const useVolatileMpStore = create<VolatileMpStore>()(set => ({
@@ -39,6 +44,10 @@ export const useVolatileMpStore = create<VolatileMpStore>()(set => ({
 		product: null,
 		endTime: 0,
 		results: null,
+	},
+	sessionData: {
+		sessionResults: null,
+		roundsPlayed: 0,
 	},
 
 	startRound: (randomProduct: RandomProduct, endTime: number) =>
@@ -61,11 +70,19 @@ export const useVolatileMpStore = create<VolatileMpStore>()(set => ({
 			roundData: { ...state.roundData, results },
 		})),
 
-	loadSession: (sessionStarted: boolean, currentlyPlaying: boolean) =>
-		set(() => ({ sessionStarted, currentlyPlaying })),
-	setConnected: (connected: boolean) => set(() => ({ connectedToSession: connected })),
-	guessPrice: (price: number) => set(() => ({ waitingForResults: true, guessedPrice: price })),
-	updatePlayersLeft: (left: number) => set(() => ({ playersLeft: left })),
+	loadSession: (sessionStarted, currentlyPlaying) => set(() => ({ sessionStarted, currentlyPlaying })),
+	setConnected: connected => set(() => ({ connectedToSession: connected })),
+	guessPrice: price => set(() => ({ waitingForResults: true, guessedPrice: price })),
+	updatePlayersLeft: left => set(() => ({ playersLeft: left })),
+	endSession: (results, roundsPlayed) =>
+		set(() => ({
+			sessionData: {
+				roundsPlayed,
+				sessionResults: results,
+			},
+			showingSessionResults: true,
+			showingRoundResults: false,
+		})),
 	reset: () =>
 		set(() => ({
 			sessionStarted: false,
@@ -80,6 +97,10 @@ export const useVolatileMpStore = create<VolatileMpStore>()(set => ({
 				product: null,
 				endTime: 0,
 				results: null,
+			},
+			sessionData: {
+				sessionResults: null,
+				roundsPlayed: 0,
 			},
 		})),
 }));
