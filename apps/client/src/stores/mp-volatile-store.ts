@@ -8,6 +8,7 @@ interface VolatileMpStore {
 	connectedToSession: boolean;
 	showingRoundResults: boolean;
 	showingSessionResults: boolean;
+	waitingForRoundEnd: boolean;
 	waitingForResults: boolean;
 	guessedPrice: number;
 	playersLeft: number;
@@ -31,11 +32,12 @@ interface VolatileMpStore {
 	endSession: (results: PlayerSessionResultsRecord[], roundsPlayed: number) => void;
 }
 
-export const useVolatileMpStore = create<VolatileMpStore>()(set => ({
+const initialState = {
 	sessionStarted: false,
 	currentlyPlaying: false,
 	connectedToSession: false,
 	showingRoundResults: false,
+	waitingForRoundEnd: false,
 	showingSessionResults: false,
 	waitingForResults: false,
 	guessedPrice: 0,
@@ -49,6 +51,10 @@ export const useVolatileMpStore = create<VolatileMpStore>()(set => ({
 		sessionResults: null,
 		roundsPlayed: 0,
 	},
+};
+
+export const useVolatileMpStore = create<VolatileMpStore>()(set => ({
+	...initialState,
 
 	startRound: (randomProduct: RandomProduct, endTime: number) =>
 		set(() => ({
@@ -56,6 +62,7 @@ export const useVolatileMpStore = create<VolatileMpStore>()(set => ({
 			currentlyPlaying: true,
 			showingRoundResults: false,
 			showingSessionResults: false,
+			waitingForRoundEnd: false,
 			roundData: {
 				product: randomProduct,
 				endTime,
@@ -69,38 +76,17 @@ export const useVolatileMpStore = create<VolatileMpStore>()(set => ({
 			waitingForResults: false,
 			roundData: { ...state.roundData, results },
 		})),
-
-	loadSession: (sessionStarted, currentlyPlaying) => set(() => ({ sessionStarted, currentlyPlaying })),
-	setConnected: connected => set(() => ({ connectedToSession: connected })),
-	guessPrice: price => set(() => ({ waitingForResults: true, guessedPrice: price })),
-	updatePlayersLeft: left => set(() => ({ playersLeft: left })),
 	endSession: (results, roundsPlayed) =>
 		set(() => ({
-			sessionData: {
-				roundsPlayed,
-				sessionResults: results,
-			},
+			sessionData: { roundsPlayed, sessionResults: results },
 			showingSessionResults: true,
 			showingRoundResults: false,
 		})),
-	reset: () =>
-		set(() => ({
-			sessionStarted: false,
-			currentlyPlaying: false,
-			connectedToSession: false,
-			showingRoundResults: false,
-			showingSessionResults: false,
-			waitingForResults: false,
-			guessedPrice: 0,
-			playersLeft: 0,
-			roundData: {
-				product: null,
-				endTime: 0,
-				results: null,
-			},
-			sessionData: {
-				sessionResults: null,
-				roundsPlayed: 0,
-			},
-		})),
+	loadSession: (sessionStarted, currentlyPlaying) => set(() => ({ sessionStarted, currentlyPlaying })),
+	setConnected: connected => set((state) => ({ connectedToSession: connected, waitingForRoundEnd: !!state.sessionStarted })),
+	guessPrice: price => set(() => ({ waitingForResults: true, guessedPrice: price })),
+	updatePlayersLeft: left => set(() => ({ playersLeft: left })),
+
+	//Players who reconnect will always wait until the next round starts
+	reset: () => set(() => initialState),
 }));

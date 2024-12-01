@@ -54,7 +54,7 @@ export const useMultiplayerConnection = () => {
 
 			setSession({ sessionId: sessionPayload.sessionId, players: sessionPayload.players });
 			setPlayer({ ...playerPayload, isHost: sessionPayload.host === playerPayload.playerName });
-			loadSession(false, sessionPayload.currentlyPlaying);
+			loadSession(sessionPayload.currentlyPlaying, sessionPayload.currentlyPlaying);
 			setConnected(true);
 
 			if (sessionPayload.host === playerPayload.playerName) {

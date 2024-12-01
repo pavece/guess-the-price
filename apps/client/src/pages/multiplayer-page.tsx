@@ -17,6 +17,7 @@ import { useVolatileMpStore } from '@/stores/mp-volatile-store';
 import { WaitingForResultsCard } from '@/components/multiplayer/waiting-for-results-card';
 import { RoundResultsCard } from '@/components/multiplayer/round-results-card';
 import { SessionResultsCard } from '@/components/multiplayer/session-results-card';
+import { WaitingRoundEndCard } from '@/components/multiplayer/waiting-round-end-card';
 
 export const MultiplayerPage = () => {
 	const { id } = useParams();
@@ -61,75 +62,81 @@ export const MultiplayerPage = () => {
 				</div>
 			</div>
 
-			<div>
-				{!mpVolatileStore.sessionStarted && (
-					<div className='flex items-center justify-center'>
-						<ShareSessionCard
-							isHost={mpStore.isHost}
-							playerName={mpStore.playerName}
-							sessionId={mpStore.sessionId}
-							playerNumber={mpStore.players}
-							onStart={hostStartRound}
-						/>
-					</div>
-				)}
-
-				{mpVolatileStore.currentlyPlaying &&
-					mpVolatileStore.roundData.product &&
-					!mpVolatileStore.waitingForResults && (
-						<div className='flex gap-6'>
-							<ProductCard
-								image={mpVolatileStore.roundData.product?.image}
-								priceInfo={mpVolatileStore.roundData.product?.priceMessage ?? ''}
-								source={mpVolatileStore.roundData.product?.source ?? ''}
-								title={mpVolatileStore.roundData.product?.name}
+			{mpVolatileStore.waitingForRoundEnd ? (
+				<div className='flex items-center justify-center h-[200px]'>
+					<WaitingRoundEndCard />
+				</div>
+			) : (
+				<div>
+					{!mpVolatileStore.sessionStarted && (
+						<div className='flex items-center justify-center'>
+							<ShareSessionCard
+								isHost={mpStore.isHost}
+								playerName={mpStore.playerName}
+								sessionId={mpStore.sessionId}
+								playerNumber={mpStore.players}
+								onStart={hostStartRound}
 							/>
-							<div className='flex-1'>
-								<GuessCard onGuess={guessPrice} />
-								<div className='p-4 bg-white border rounded-md mt-4 w-full'>
-									<RoundTimer />
-								</div>
-							</div>
 						</div>
 					)}
 
-				{mpVolatileStore.waitingForResults && (
-					<div className='w-full flex items-center justify-center'>
-						<WaitingForResultsCard />
-					</div>
-				)}
-
-				{mpVolatileStore.showingRoundResults && (
-					<>
-						<div className='flex gap-6'>
-							<ProductCard
-								image={mpVolatileStore.roundData.product?.image ?? ''}
-								priceInfo={mpVolatileStore.roundData.product?.priceMessage ?? ''}
-								source={mpVolatileStore.roundData.product?.source ?? ''}
-								title={mpVolatileStore.roundData.product?.name ?? ''}
-								price={mpVolatileStore.roundData.product?.price ?? 0}
-							/>
-							<div className='flex-1'>
-								<RoundResultsCard
-									isHost={mpStore.isHost}
-									results={mpVolatileStore.roundData.results ?? []}
-									playerName={mpStore.playerName}
-									onEndSession={hostEndSession}
-									onNextRound={hostStartRound}
+					{mpVolatileStore.currentlyPlaying &&
+						mpVolatileStore.roundData.product &&
+						!mpVolatileStore.waitingForResults && (
+							<div className='flex gap-6'>
+								<ProductCard
+									image={mpVolatileStore.roundData.product?.image}
+									priceInfo={mpVolatileStore.roundData.product?.priceMessage ?? ''}
+									source={mpVolatileStore.roundData.product?.source ?? ''}
+									title={mpVolatileStore.roundData.product?.name}
 								/>
+								<div className='flex-1'>
+									<GuessCard onGuess={guessPrice} />
+									<div className='p-4 bg-white border rounded-md mt-4 w-full'>
+										<RoundTimer />
+									</div>
+								</div>
 							</div>
-						</div>
-					</>
-				)}
+						)}
 
-				{mpVolatileStore.showingSessionResults && (
-					<SessionResultsCard
-						results={mpVolatileStore.sessionData.sessionResults ?? []}
-						roundsPlayed={mpVolatileStore.sessionData.roundsPlayed}
-						isHost={mpStore.isHost}
-					/>
-				)}
-			</div>
+					{mpVolatileStore.waitingForResults && (
+						<div className='w-full flex items-center justify-center'>
+							<WaitingForResultsCard />
+						</div>
+					)}
+
+					{mpVolatileStore.showingRoundResults && (
+						<>
+							<div className='flex gap-6'>
+								<ProductCard
+									image={mpVolatileStore.roundData.product?.image ?? ''}
+									priceInfo={mpVolatileStore.roundData.product?.priceMessage ?? ''}
+									source={mpVolatileStore.roundData.product?.source ?? ''}
+									title={mpVolatileStore.roundData.product?.name ?? ''}
+									price={mpVolatileStore.roundData.product?.price ?? 0}
+								/>
+								<div className='flex-1'>
+									<RoundResultsCard
+										isHost={mpStore.isHost}
+										results={mpVolatileStore.roundData.results ?? []}
+										playerName={mpStore.playerName}
+										onEndSession={hostEndSession}
+										onNextRound={hostStartRound}
+									/>
+								</div>
+							</div>
+						</>
+					)}
+
+					{mpVolatileStore.showingSessionResults && (
+						<SessionResultsCard
+							results={mpVolatileStore.sessionData.sessionResults ?? []}
+							roundsPlayed={mpVolatileStore.sessionData.roundsPlayed}
+							isHost={mpStore.isHost}
+						/>
+					)}
+				</div>
+			)}
 		</div>
 	);
 };
