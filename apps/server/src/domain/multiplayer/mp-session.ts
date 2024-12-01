@@ -72,7 +72,7 @@ export class MpSession {
 			bestGuess: player.metrics?.bestGuess ?? 0,
 		}));
 
-		sessionResults.playerResults = sessionResults.playerResults.sort((a, b) => a.points + b.points);
+		sessionResults.playerResults = sessionResults.playerResults.sort((a, b) => b.points - a.points);
 
 		return sessionResults;
 	}
@@ -107,7 +107,13 @@ export class MpSession {
 		if (!disconnectedPlayer) return;
 
 		disconnectedPlayer.disconnectedAt = new Date();
-		this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.PLAYER_LEAVES, { playerName: disconnectedPlayer.name, players: this.players.length } as PlayerLeavesOutgoingPayload);
+		this.io
+			.of('/mp-ws')
+			.to(this.id)
+			.emit(OutgoingEvents.PLAYER_LEAVES, {
+				playerName: disconnectedPlayer.name,
+				players: this.players.length,
+			} as PlayerLeavesOutgoingPayload);
 	}
 
 	public isSocketConnected(socketId: string) {
@@ -127,7 +133,9 @@ export class MpSession {
 		this.refreshActivity();
 		return {
 			...this.currentRound,
-			endTime: new Date().setSeconds(this.currentRound.startTime.getSeconds() + Number(process.env.MP_SESSION_ROUND_DURATION_SECONDS ?? 30)),
+			endTime: new Date().setSeconds(
+				this.currentRound.startTime.getSeconds() + Number(process.env.MP_SESSION_ROUND_DURATION_SECONDS ?? 30)
+			),
 		};
 	}
 

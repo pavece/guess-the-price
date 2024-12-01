@@ -21,7 +21,7 @@ const connect = () => {
 export const useMultiplayerConnection = () => {
 	const [socketError, setSocketError] = useState<null | string>(null);
 	const { setSession, setPlayer, clear, sessionId, playerId } = useMpStore();
-	const { loadSession, setConnected, connectedToSession } = useVolatileMpStore();
+	const { loadSession, setConnected, connectedToSession, reset } = useVolatileMpStore();
 	const navigate = useNavigate();
 
 	const createSession = () => {
@@ -37,8 +37,9 @@ export const useMultiplayerConnection = () => {
 	};
 
 	const leaveSession = () => {
-		clear();
 		navigate('/');
+		clear();
+		reset();
 		socket.disconnect();
 	};
 

@@ -1,6 +1,7 @@
 import { Copy, Joystick } from '@phosphor-icons/react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import { toast } from 'sonner';
 
 interface Props {
 	isHost: boolean;
@@ -13,6 +14,7 @@ interface Props {
 export const ShareSessionCard = ({ isHost, sessionId, playerNumber, playerName, onStart }: Props) => {
 	const onCopyLink = () => {
 		navigator.clipboard.writeText(`http://localhost:5173/multiplayer/${sessionId}`);
+		toast('Session link copied');
 	};
 
 	return (

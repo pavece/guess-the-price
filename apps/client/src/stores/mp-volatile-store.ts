@@ -60,9 +60,26 @@ export const useVolatileMpStore = create<VolatileMpStore>()(set => ({
 			waitingForResults: false,
 			roundData: { ...state.roundData, results },
 		})),
-	reset: () => set(() => ({ sessionStarted: false, currentlyPlaying: false })),
-	loadSession: (sessionStarted: boolean, currentlyPlaying: boolean) => set(() => ({ sessionStarted, currentlyPlaying })),
+
+	loadSession: (sessionStarted: boolean, currentlyPlaying: boolean) =>
+		set(() => ({ sessionStarted, currentlyPlaying })),
 	setConnected: (connected: boolean) => set(() => ({ connectedToSession: connected })),
 	guessPrice: (price: number) => set(() => ({ waitingForResults: true, guessedPrice: price })),
 	updatePlayersLeft: (left: number) => set(() => ({ playersLeft: left })),
+	reset: () =>
+		set(() => ({
+			sessionStarted: false,
+			currentlyPlaying: false,
+			connectedToSession: false,
+			showingRoundResults: false,
+			showingSessionResults: false,
+			waitingForResults: false,
+			guessedPrice: 0,
+			playersLeft: 0,
+			roundData: {
+				product: null,
+				endTime: 0,
+				results: null,
+			},
+		})),
 }));
