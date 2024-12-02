@@ -14,7 +14,7 @@ interface Props {
 export const ShareSessionCard = ({ isHost, sessionId, playerNumber, playerName, onStart }: Props) => {
 	const onCopyLink = () => {
 		navigator.clipboard.writeText(`http://localhost:5173/multiplayer/${sessionId}`);
-		toast('Session link copied');
+		toast.info('Session link copied!');
 	};
 
 	return (

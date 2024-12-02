@@ -11,6 +11,7 @@ import { IncomingEvents, OutgoingEvents } from '@/interfaces/mp-events.types';
 import { useMpStore } from '@/stores/mp-store';
 import { useNavigate } from 'react-router-dom';
 import { useVolatileMpStore } from '@/stores/mp-volatile-store';
+import { toast } from 'sonner';
 
 const connect = () => {
 	if (!socket.connected) {
@@ -40,7 +41,7 @@ export const useMultiplayerConnection = () => {
 		navigate('/');
 		clear();
 		reset();
-		socket.disconnect();
+		socket.disconnect(); //In order to send disconnection event to server
 	};
 
 	useEffect(() => {
@@ -72,7 +73,6 @@ export const useMultiplayerConnection = () => {
 		};
 
 		const onSocketDisconnect = () => {
-			console.log('Socket disconnected');
 			setConnected(false);
 		};
 
@@ -83,14 +83,25 @@ export const useMultiplayerConnection = () => {
 			}
 		};
 
+		const onSessionTerminated = () => {
+			navigate('/');
+			clear();
+			reset();
+			toast.info('Session ended', {
+				description: 'This session has ended',
+			});
+		};
+
 		socket.on(OutgoingEvents.SESSION_DETAILS, onSessionDetails);
 		socket.on(OutgoingEvents.EXCEPTION, onSocketError);
+		socket.on(OutgoingEvents.SESSION_TERMINATE, onSessionTerminated);
 		socket.on('disconnect', onSocketDisconnect);
 		socket.on('connect', onSocketConnect);
 
 		return () => {
 			socket.off(OutgoingEvents.SESSION_DETAILS, onSessionDetails);
 			socket.off(OutgoingEvents.EXCEPTION, onSocketError);
+			socket.off(OutgoingEvents.SESSION_TERMINATE, onSessionTerminated);
 			socket.off('disconnect', onSocketDisconnect);
 			socket.off('connect', onSocketConnect);
 		};
