@@ -87,7 +87,7 @@ export const useMultiplayerConnection = () => {
 			navigate('/');
 			clear();
 			reset();
-			toast.info('Session ended', {
+			toast.warning('Session ended', {
 				description: 'This session has ended',
 			});
 		};

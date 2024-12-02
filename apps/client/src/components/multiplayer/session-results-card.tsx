@@ -8,9 +8,12 @@ interface Props {
 	results: PlayerSessionResultsRecord[];
 	roundsPlayed: number;
 	isHost: boolean;
+
+	onTerminateSession: () => void;
+	onContinuePlaying: () => void;
 }
 
-export const SessionResultsCard = ({ results, roundsPlayed, isHost }: Props) => {
+export const SessionResultsCard = ({ results, roundsPlayed, isHost, onTerminateSession, onContinuePlaying }: Props) => {
 	const playerName = useMpStore(state => state.playerName);
 
 	return (
@@ -49,10 +52,10 @@ export const SessionResultsCard = ({ results, roundsPlayed, isHost }: Props) => 
 			{isHost && (
 				<CardFooter className='flex-col items-start gap-2'>
 					<div className='flex flex-row gap-4 w-full'>
-						<Button variant='destructive'>
+						<Button variant='destructive' onClick={onTerminateSession}>
 							<SignOut size={24} /> Terminate session
 						</Button>
-						<Button className='w-full'>
+						<Button className='w-full' onClick={onContinuePlaying}>
 							<GameController size={24} /> Play again
 						</Button>
 					</div>

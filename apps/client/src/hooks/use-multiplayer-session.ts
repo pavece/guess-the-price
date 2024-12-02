@@ -35,6 +35,10 @@ export const useMultiplayerSession = () => {
 		}
 	};
 
+	const hostTerminateSession = () => {
+		socket.emit(IncomingEvents.HOST_TERMINATE_SESSION, { playerId: mpStore.playerId } as EndSessionPayload);
+	};
+
 	useEffect(() => {
 		const onRoundStart = (payload: RoundStartsOutgoingPayload) => {
 			mpVolatileStore.startRound(payload.product, payload.endTime);
@@ -68,6 +72,7 @@ export const useMultiplayerSession = () => {
 	return {
 		hostStartRound,
 		hostEndSession,
+		hostTerminateSession,
 		guessPrice,
 	};
 };
