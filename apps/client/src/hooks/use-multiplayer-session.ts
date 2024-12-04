@@ -39,6 +39,10 @@ export const useMultiplayerSession = () => {
 		socket.emit(IncomingEvents.HOST_TERMINATE_SESSION, { playerId: mpStore.playerId } as EndSessionPayload);
 	};
 
+	const hostRestartSession = () => {
+		socket.emit(IncomingEvents.HOST_RESTART_SESSION, { playerId: mpStore.playerId } as EndSessionPayload);
+	};
+
 	useEffect(() => {
 		const onRoundStart = (payload: RoundStartsOutgoingPayload) => {
 			mpVolatileStore.startRound(payload.product, payload.endTime);
@@ -56,16 +60,22 @@ export const useMultiplayerSession = () => {
 			mpVolatileStore.endSession(payload.playerResults, payload.roundsPlayed);
 		};
 
+		const onSessionRestart = () => {
+			mpVolatileStore.reset();
+		};
+
 		socket.on(OutgoingEvents.ROUND_STARTS, onRoundStart);
 		socket.on(OutgoingEvents.ROUND_ENDS, onRoundEnd);
 		socket.on(OutgoingEvents.PLAYER_GUESS, onPlayerGuess);
 		socket.on(OutgoingEvents.SESSION_ENDS, onSessionEnd);
+		socket.on(OutgoingEvents.SESSION_RESTARTS, onSessionRestart);
 
 		return () => {
 			socket.off(OutgoingEvents.ROUND_STARTS, onRoundStart);
 			socket.off(OutgoingEvents.ROUND_ENDS, onRoundEnd);
 			socket.off(OutgoingEvents.PLAYER_GUESS, onPlayerGuess);
 			socket.off(OutgoingEvents.SESSION_ENDS, onSessionEnd);
+			socket.off(OutgoingEvents.SESSION_RESTARTS, onSessionRestart);
 		};
 	}, []);
 
@@ -73,6 +83,7 @@ export const useMultiplayerSession = () => {
 		hostStartRound,
 		hostEndSession,
 		hostTerminateSession,
+		hostRestartSession,
 		guessPrice,
 	};
 };

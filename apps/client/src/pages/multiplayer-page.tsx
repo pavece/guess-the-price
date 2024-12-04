@@ -26,7 +26,8 @@ export const MultiplayerPage = () => {
 	useMpNotifications();
 
 	const { connectToExistingSession, leaveSession } = useMultiplayerConnection();
-	const { hostStartRound, hostEndSession, hostTerminateSession, guessPrice } = useMultiplayerSession();
+	const { hostStartRound, hostEndSession, hostTerminateSession, hostRestartSession, guessPrice } =
+		useMultiplayerSession();
 
 	useEffect(() => {
 		if (id && !mpStore.playerId && !mpStore.sessionId) {
@@ -134,7 +135,7 @@ export const MultiplayerPage = () => {
 							roundsPlayed={mpVolatileStore.sessionData.roundsPlayed}
 							isHost={mpStore.isHost}
 							onTerminateSession={hostTerminateSession}
-							onContinuePlaying={() => {}}
+							onContinuePlaying={hostRestartSession}
 						/>
 					)}
 				</div>
