@@ -55,6 +55,7 @@ export interface PlayerDetailsOutgoingPayload {
 
 export interface ExceptionOutgoingPayload {
 	msg: string;
+	code: number;
 }
 
 export interface RoundStartsOutgoingPayload {
@@ -76,5 +77,5 @@ export interface SessionResultsOutgoingPayload {
 
 export interface RoundResultsOutgoingPayload {
 	product: RandomProduct;
-	playerResults: PlayerRoundResultsRecord[]
+	playerResults: PlayerRoundResultsRecord[];
 }
