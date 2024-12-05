@@ -203,7 +203,7 @@ export class MpSession {
 
 		return {
 			product: this.currentRound.product,
-			playerResults: results,
+			playerResults: results.sort((a, b) => b.points - a.points),
 		};
 	}
 
@@ -225,7 +225,7 @@ export class MpSession {
 
 	public checkSessionActive() {
 		if (compareDates(this.lastActive, new Date()) >= Number(process.env.MP_SESSION_INACTIVE_SECONDS ?? 180)) {
-			this.endSession();
+			this.io.of('/mp-ws').to(this.id).emit(OutgoingEvents.SESSION_TERMINATE);
 			return false;
 		}
 		return true;

@@ -1,5 +1,7 @@
 export class SocketError extends Error {
-	constructor(message: string) {
+	public code: number;
+	constructor(message: string, code?: number) {
 		super(message);
+		this.code = code ?? 500;
 	}
 }

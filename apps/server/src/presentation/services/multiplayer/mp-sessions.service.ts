@@ -27,7 +27,7 @@ export class MPSessionsService {
 
 		const session = this.sessionManager.getSession(sessionId);
 		if (!session) {
-			throw new SocketError('The session does not exist');
+			throw new SocketError('The session does not exist', 404);
 		}
 
 		if (session.isSocketConnected(socketId)) {
@@ -41,7 +41,7 @@ export class MPSessionsService {
 	public static handlePlayerReconnection(sessionId: string, playerId: string, socketId: string) {
 		const session = this.sessionManager.getSession(sessionId);
 		if (!session) {
-			throw new SocketError('This session does not exist');
+			throw new SocketError('This session does not exist', 404);
 		}
 		const player = session.reconnectPlayer(playerId, socketId);
 
@@ -56,7 +56,7 @@ export class MPSessionsService {
 				sessionId: session.id,
 				currentlyPlaying: !!session.currentRound,
 			},
-			players: session.players.length
+			players: session.players.length,
 		};
 	}
 

@@ -55,6 +55,7 @@ export interface PlayerDetailsOutgoingPayload {
 
 export interface ExceptionOutgoingPayload {
 	msg: string;
+	code: number;
 }
 
 export interface RoundStartsOutgoingPayload {
