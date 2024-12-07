@@ -3,6 +3,7 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import { SignOut } from '@phosphor-icons/react';
 import { SkipForward } from 'lucide-react';
+import { DestructiveActionButton } from '../ui/confirmation-dialog';
 
 interface Props {
 	results: PlayerRoundResultsRecord[];
@@ -46,9 +47,13 @@ export const RoundResultsCard = ({ results, playerName, isHost, onNextRound, onE
 			</CardContent>
 			{isHost && (
 				<CardFooter className='flex gap-2'>
-					<Button variant='destructive' onClick={onEndSession}>
+					<DestructiveActionButton
+						title='Are you sure?'
+						description='If you end this session all the results will be cleared, but you will be able to continue playing with the same players if you want.'
+						onConfirm={onEndSession}
+					>
 						<SignOut size={24} /> End session
-					</Button>
+					</DestructiveActionButton>
 					<Button className='w-full' onClick={onNextRound}>
 						<SkipForward size={24} /> Next round
 					</Button>

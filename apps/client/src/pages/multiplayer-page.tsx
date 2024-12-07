@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import { GuessCard } from '@/components/classic-mode/guess-card';
 import { OutgoingEvents } from '@/interfaces/mp-events.types';
 import { PlayerJoinsOutgoingPayload } from '@/interfaces/mp-payloads.types';
@@ -18,6 +17,7 @@ import { WaitingForResultsCard } from '@/components/multiplayer/waiting-for-resu
 import { RoundResultsCard } from '@/components/multiplayer/round-results-card';
 import { SessionResultsCard } from '@/components/multiplayer/session-results-card';
 import { WaitingRoundEndCard } from '@/components/multiplayer/waiting-round-end-card';
+import { DestructiveActionButton } from '@/components/ui/confirmation-dialog';
 
 export const MultiplayerPage = () => {
 	const { id } = useParams();
@@ -57,9 +57,13 @@ export const MultiplayerPage = () => {
 				</div>
 
 				<div>
-					<Button variant='destructive' onClick={leaveSession}>
+					<DestructiveActionButton
+						title='Are you sure?'
+						description='Once you leave the session you cannot rejoin with the same name. Meaning that if you rejoin you will appear as a new person and will loose track of your guesses.'
+						onConfirm={leaveSession}
+					>
 						<SignOut size={24} /> Leave session
-					</Button>
+					</DestructiveActionButton>
 				</div>
 			</div>
 

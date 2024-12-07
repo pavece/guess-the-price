@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useMpStore } from '@/stores/mp-store';
 import { Button } from '../ui/button';
 import { GameController, SignOut } from '@phosphor-icons/react';
+import { DestructiveActionButton } from '../ui/confirmation-dialog';
 
 interface Props {
 	results: PlayerSessionResultsRecord[];
@@ -52,9 +53,9 @@ export const SessionResultsCard = ({ results, roundsPlayed, isHost, onTerminateS
 			{isHost && (
 				<CardFooter className='flex-col items-start gap-2'>
 					<div className='flex flex-row gap-4 w-full'>
-						<Button variant='destructive' onClick={onTerminateSession}>
+						<DestructiveActionButton title='Are you sure?' description="If you terminate this session you will need to create a new one and invite everyone again to continue playing." onConfirm={onTerminateSession}>
 							<SignOut size={24} /> Terminate session
-						</Button>
+						</DestructiveActionButton>
 						<Button className='w-full' onClick={onContinuePlaying}>
 							<GameController size={24} /> Play again
 						</Button>
