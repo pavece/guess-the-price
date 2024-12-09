@@ -1,6 +1,6 @@
-import CountUp from 'react-countup';
 import { Card, CardContent } from '../ui/card';
 import { Image } from '../ui/image';
+import { PriceContainer } from '../ui/price-container';
 
 interface Props {
 	title: string;
@@ -27,9 +27,7 @@ export const ProductCard = ({ title, image, source, priceInfo, price }: Props) =
 					{price && (
 						<>
 							<h3 className='mt-2 text-md font-medium'>Price</h3>
-							<h2 className='text-3xl font-bold'>
-								<CountUp end={price} decimal=',' decimals={2} duration={1.5} />$
-							</h2>
+							<PriceContainer price={price} animate={true} className='text-3xl font-bold' animationDuration={1.5} />
 						</>
 					)}
 				</div>

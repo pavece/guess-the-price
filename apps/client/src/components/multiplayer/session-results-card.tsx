@@ -26,34 +26,36 @@ export const SessionResultsCard = ({ results, roundsPlayed, isHost, onTerminateS
 			<CardContent>
 				<div className='flex flex-col gap-4'>
 					{results.map((result, i) => (
-						<>
-							<div className='flex justify-between items-center p-4 rounded-md border'>
-								<div className='flex gap-2 items-center justify-start'>
-									<h3 className='text-lg font-semibold'>#{i + 1}</h3>
-									<h3 className='font-medium'>
-										{result.playerName} {playerName == result.playerName && '(You)'}
-									</h3>
-								</div>
-								<div className='text-start'>
-									<p className='text-neutral-600'>
-										Total points:
-										<span className='ml-1 text-neutral-900 font-semibold'>
-											{result.points}/{100 * roundsPlayed}
-										</span>
-									</p>
-									<p className='text-neutral-600'>
-										Best guess: <span className='ml-1 text-neutral-900 font-semibold'>{result.bestGuess}/100</span>
-									</p>
-								</div>
+						<div className='flex justify-between items-center p-4 rounded-md border' key={result.playerName}>
+							<div className='flex gap-2 items-center justify-start'>
+								<h3 className='text-lg font-semibold'>#{i + 1}</h3>
+								<h3 className='font-medium'>
+									{result.playerName} {playerName == result.playerName && '(You)'}
+								</h3>
 							</div>
-						</>
+							<div className='text-start'>
+								<p className='text-neutral-600'>
+									Total points:
+									<span className='ml-1 text-neutral-900 font-semibold'>
+										{result.points}/{100 * roundsPlayed}
+									</span>
+								</p>
+								<p className='text-neutral-600'>
+									Best guess: <span className='ml-1 text-neutral-900 font-semibold'>{result.bestGuess}/100</span>
+								</p>
+							</div>
+						</div>
 					))}
 				</div>
 			</CardContent>
 			{isHost && (
 				<CardFooter className='flex-col items-start gap-2'>
 					<div className='flex flex-row gap-4 w-full'>
-						<DestructiveActionButton title='Are you sure?' description="If you terminate this session you will need to create a new one and invite everyone again to continue playing." onConfirm={onTerminateSession}>
+						<DestructiveActionButton
+							title='Are you sure?'
+							description='If you terminate this session you will need to create a new one and invite everyone again to continue playing.'
+							onConfirm={onTerminateSession}
+						>
 							<SignOut size={24} /> Terminate session
 						</DestructiveActionButton>
 						<Button className='w-full' onClick={onContinuePlaying}>

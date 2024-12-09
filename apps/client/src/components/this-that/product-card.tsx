@@ -1,9 +1,9 @@
 import { CaretDoubleUp } from '@phosphor-icons/react';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardFooter } from '../ui/card';
-import CountUp from 'react-countup';
 import { Image } from '../ui/image';
 import { RandomProduct } from '@/interfaces/product.interface';
+import { PriceContainer } from '../ui/price-container';
 
 interface Props {
 	product: RandomProduct;
@@ -35,13 +35,10 @@ export const ProductCard = ({
 
 					<h3>Price message</h3>
 					<p>{priceMessage}</p>
-
 					{showingResult && (
 						<>
 							<h3>Price</h3>
-							<h2 className='text-3xl font-bold'>
-								<CountUp end={price} decimal=',' decimals={2} duration={animate ? 0.5 : 0.01} />$
-							</h2>
+							<PriceContainer price={price} animate={animate} className='text-3xl font-bold' />
 						</>
 					)}
 				</div>

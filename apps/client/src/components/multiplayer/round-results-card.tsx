@@ -26,7 +26,7 @@ export const RoundResultsCard = ({ results, playerName, isHost, onNextRound, onE
 					{!results.length && <h1 className='text-lg font-semibold'>Nobody guessed...</h1>}
 
 					{results.map((result, i) => (
-						<div className='flex justify-between items-center p-4 rounded-md border'>
+						<div className='flex justify-between items-center p-4 rounded-md border' key={result.playerName}>
 							<div className='flex gap-2 items-center justify-start'>
 								<h3 className='text-lg font-semibold'>#{i + 1}</h3>
 								<h3 className='font-medium'>
