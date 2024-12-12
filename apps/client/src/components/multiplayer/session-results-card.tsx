@@ -4,6 +4,7 @@ import { useMpStore } from '@/stores/mp-store';
 import { Button } from '../ui/button';
 import { GameController, SignOut } from '@phosphor-icons/react';
 import { DestructiveActionButton } from '../ui/confirmation-dialog';
+import { motion } from 'framer-motion';
 
 interface Props {
 	results: PlayerSessionResultsRecord[];
@@ -13,6 +14,22 @@ interface Props {
 	onTerminateSession: () => void;
 	onContinuePlaying: () => void;
 }
+
+const containerVariant = {
+	hidden: { opacity: 0 },
+	visible: {
+		opacity: 1,
+		transition: {
+			delayChildren: 0.2,
+			staggerChildren: 0.15,
+		},
+	},
+};
+
+const itemVariant = {
+	hidden: { opacity: 0, x: 50 },
+	visible: { opacity: 1, x: 0 },
+};
 
 export const SessionResultsCard = ({ results, roundsPlayed, isHost, onTerminateSession, onContinuePlaying }: Props) => {
 	const playerName = useMpStore(state => state.playerName);
@@ -24,9 +41,13 @@ export const SessionResultsCard = ({ results, roundsPlayed, isHost, onTerminateS
 				<CardDescription>This session ended, let's see the results.</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<div className='flex flex-col gap-4'>
+				<motion.div initial='hidden' animate='visible' variants={containerVariant} className='flex flex-col gap-4'>
 					{results.map((result, i) => (
-						<div className='flex justify-between items-center p-4 rounded-md border' key={result.playerName}>
+						<motion.div
+							variants={itemVariant}
+							className='flex justify-between items-center p-4 rounded-md border'
+							key={result.playerName}
+						>
 							<div className='flex gap-2 items-center justify-start'>
 								<h3 className='text-lg font-semibold'>#{i + 1}</h3>
 								<h3 className='font-medium'>
@@ -44,9 +65,9 @@ export const SessionResultsCard = ({ results, roundsPlayed, isHost, onTerminateS
 									Best guess: <span className='ml-1 text-neutral-900 font-semibold'>{result.bestGuess}/100</span>
 								</p>
 							</div>
-						</div>
+						</motion.div>
 					))}
-				</div>
+				</motion.div>
 			</CardContent>
 			{isHost && (
 				<CardFooter className='flex-col items-start gap-2'>

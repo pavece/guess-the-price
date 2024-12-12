@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { SignOut } from '@phosphor-icons/react';
 import { SkipForward } from 'lucide-react';
 import { DestructiveActionButton } from '../ui/confirmation-dialog';
+import { motion } from 'framer-motion';
 
 interface Props {
 	results: PlayerRoundResultsRecord[];
@@ -14,6 +15,22 @@ interface Props {
 	onNextRound: () => void;
 }
 
+const containerVariant = {
+	hidden: { opacity: 0 },
+	visible: {
+		opacity: 1,
+		transition: {
+			delayChildren: 0.1,
+			staggerChildren: 0.15,
+		},
+	},
+};
+
+const itemVariant = {
+	hidden: { opacity: 0, x: 50 },
+	visible: { opacity: 1, x: 0 },
+};
+
 export const RoundResultsCard = ({ results, playerName, isHost, onNextRound, onEndSession }: Props) => {
 	return (
 		<Card>
@@ -22,11 +39,14 @@ export const RoundResultsCard = ({ results, playerName, isHost, onNextRound, onE
 				<CardDescription>Let's see who performed the best this round!</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<div className='flex gap-4 flex-col'>
+				<motion.div initial='hidden' animate='visible' className='flex gap-4 flex-col' variants={containerVariant}>
 					{!results.length && <h1 className='text-lg font-semibold'>Nobody guessed...</h1>}
-
 					{results.map((result, i) => (
-						<div className='flex justify-between items-center p-4 rounded-md border' key={result.playerName}>
+						<motion.div
+							variants={itemVariant}
+							className='flex justify-between items-center p-4 rounded-md border'
+							key={result.playerName}
+						>
 							<div className='flex gap-2 items-center justify-start'>
 								<h3 className='text-lg font-semibold'>#{i + 1}</h3>
 								<h3 className='font-medium'>
@@ -41,9 +61,9 @@ export const RoundResultsCard = ({ results, playerName, isHost, onNextRound, onE
 									Points: <span className='text-neutral-900 font-semibold'>{result.points}/100</span>
 								</p>
 							</div>
-						</div>
+						</motion.div>
 					))}
-				</div>
+				</motion.div>
 			</CardContent>
 			{isHost && (
 				<CardFooter className='flex gap-2'>
