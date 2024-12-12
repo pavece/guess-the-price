@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ResultRecord, ResultsCard } from '@/components/classic-mode/results-card';
 import { ResultCard } from '@/components/classic-mode/result-card';
 import { ProductCard } from '@/components/classic-mode/product-card';
-import { Product } from '@/interfaces/product.interface';
+import { RandomProduct } from '@/interfaces/product.interface';
 import { GuessCard } from '@/components/classic-mode/guess-card';
 import { Loading } from '@/components/ui/loading';
 import { motion } from 'framer-motion';
@@ -14,7 +14,7 @@ const guessPrice = async (productId: string, price: number) => {
 };
 
 export const ClassicModePage = () => {
-	const [product, setProduct] = useState<Product | null>(null);
+	const [product, setProduct] = useState<RandomProduct | null>(null);
 	const [resultsVisible, setResultsVisible] = useState(false);
 	const [guessedResults, setGuessedResults] = useState<[number, number, number] | null>(null);
 	const [results, setResults] = useState<ResultRecord[]>([]);
@@ -47,7 +47,7 @@ export const ClassicModePage = () => {
 				<motion.div
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
-					transition={{ duration: 1 }}
+					transition={{ duration: 0.5 }}
 					className='w-full flex items-center justify-center mt-10'
 				>
 					<ResultsCard
@@ -78,50 +78,54 @@ export const ClassicModePage = () => {
 				<motion.div
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
-					transition={{ duration: 1 }}
+					transition={{ duration: 0.5 }}
 					className='mt-6 flex md:flex-row flex-col gap-4 flex-1'
 				>
 					<ProductCard
 						title={product.name}
 						image={product.image}
-						priceInfo={product.priceMessage}
+						priceInfo={product.priceMessage ?? ''}
 						source={product.source ?? 'Unknown source'}
 					/>
 
 					{!resultsVisible && (
-						<GuessCard
-							onGuess={async price => {
-								const result = await guessPrice(product.id, price);
+						<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+							<GuessCard
+								onGuess={async price => {
+									const result = await guessPrice(product.id, price);
 
-								setGuessedResults([result.points, result.originalPrice, result.guessedPrice]);
-								setResults(results => [
-									...results,
-									{
-										title: product.name,
-										points: result.points,
-										image: product.image,
-										guessedPrice: result.guessedPrice,
-										originalPrice: result.originalPrice,
-									},
-								]);
-								setResultsVisible(true);
-							}}
-						/>
+									setGuessedResults([result.points, result.originalPrice, result.guessedPrice]);
+									setResults(results => [
+										...results,
+										{
+											title: product.name,
+											points: result.points,
+											image: product.image,
+											guessedPrice: result.guessedPrice,
+											originalPrice: result.originalPrice,
+										},
+									]);
+									setResultsVisible(true);
+								}}
+							/>
+						</motion.div>
 					)}
 
 					{resultsVisible && (
-						<ResultCard
-							points={guessedResults?.[0] ?? 0}
-							guessedPrice={guessedResults?.[2] ?? 0}
-							originalPrice={guessedResults?.[1] ?? 0}
-							onContinue={() => {
-								setResultsVisible(false);
-								fetchProduct();
-							}}
-							onFinish={() => {
-								setGameEnded(true);
-							}}
-						/>
+						<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+							<ResultCard
+								points={guessedResults?.[0] ?? 0}
+								guessedPrice={guessedResults?.[2] ?? 0}
+								originalPrice={guessedResults?.[1] ?? 0}
+								onContinue={() => {
+									setResultsVisible(false);
+									fetchProduct();
+								}}
+								onFinish={() => {
+									setGameEnded(true);
+								}}
+							/>
+						</motion.div>
 					)}
 				</motion.div>
 			)}
