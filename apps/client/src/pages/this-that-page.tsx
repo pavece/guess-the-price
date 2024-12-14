@@ -111,7 +111,7 @@ export const ThisOrThatPage = () => {
 								selectProduct(products.selectedProduct);
 							}}
 						/>
-						<div className='rounded-lg border border-stone-200 bg-white text-stone-950 shadow-sm p-3'>
+						<div className='rounded-lg border border-zinc-200 bg-white text-zinc-950 shadow-sm p-3'>
 							<h2 className='text-2xl font-semibold'>VS</h2>
 						</div>
 						<motion.div ref={scope} className='w-full'>

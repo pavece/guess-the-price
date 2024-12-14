@@ -8,8 +8,10 @@ export const MainLayout = () => {
 		<>
 			<Toaster position='top-right' richColors closeButton theme='light' toastOptions={{}} />
 
-			<div className='fixed inset-0 top-0 right-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]'></div>
-			<div className='flex flex-col justify-between min-h-screen'>
+			<div className='hidden dark:block absolute top-0 z-[-2] h-screen w-screen bg-zinc-950 bg-[radial-gradient(#ffffff33_1px,#09090b_1px)] bg-[size:20px_20px]'></div>
+			<div className='dark:hidden fixed inset-0 top-0 right-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]'></div>
+
+			<div className='flex flex-col justify-between min-h-screen dark:text-white'>
 				<div>
 					<Navbar />
 					<main className='px-5 py-8 flex flex-col w-full items-center'>
