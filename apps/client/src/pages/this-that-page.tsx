@@ -72,7 +72,7 @@ export const ThisOrThatPage = () => {
 				<div>
 					<div className='mb-10'>
 						<h1 className='font-semibold text-3xl'>This or that mode</h1>
-						<p className='text-zinc-800'>Get two products and guess which one is more expensive.</p>
+						<p className='text-zinc-600 dark:text-zinc-400'>Get two products and guess which one is more expensive.</p>
 					</div>
 					<motion.div
 						initial={{ opacity: 0 }}
@@ -91,7 +91,7 @@ export const ThisOrThatPage = () => {
 		<div>
 			<div className='mb-10'>
 				<h1 className='font-semibold text-3xl'>This or that mode</h1>
-				<p className='text-zinc-800'>Get two products and guess which one is more expensive.</p>
+				<p className='text-zinc-600 dark:text-zinc-400'>Get two products and guess which one is more expensive.</p>
 			</div>
 			<AnimatePresence>
 				{!products ? (
@@ -111,7 +111,7 @@ export const ThisOrThatPage = () => {
 								selectProduct(products.selectedProduct);
 							}}
 						/>
-						<div className='rounded-lg border border-zinc-200 bg-white text-zinc-950 shadow-sm p-3'>
+						<div className='rounded-lg border border-zinc-200 bg-white dark:text-white dark:bg-transparent dark:border-zinc-800 text-zinc-950 shadow-sm p-3'>
 							<h2 className='text-2xl font-semibold'>VS</h2>
 						</div>
 						<motion.div ref={scope} className='w-full'>

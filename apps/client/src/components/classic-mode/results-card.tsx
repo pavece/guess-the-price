@@ -51,11 +51,11 @@ export const ResultsCard = ({ guesses, onContinue }: Props) => {
 				</CardHeader>
 				<CardContent>
 					<div className='flex items-center justify-center gap-24'>
-						<div>
+						<div className='text-center'>
 							<h2 className='text-3xl font-bold'>{guesses.length}</h2>
 							<p className='text-md text-zinc-500'>Guesses</p>
 						</div>
-						<div>
+						<div className='text-center'>
 							<h2 className='text-3xl font-bold'>
 								{guesses.reduce((prev, curr) => prev + curr.points, 0)} / {guesses.length * 100}
 							</h2>

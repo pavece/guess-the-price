@@ -25,7 +25,9 @@ export const MainPage = () => {
 		<div>
 			<div>
 				<h1 className='font-bold text-3xl'>Choose game mode</h1>
-				<p className='text-md text-zinc-600 '>Choose your desired game mode and start guessing the price!</p>
+				<p className='text-md text-zinc-600 dark:text-zinc-400 '>
+					Choose your desired game mode and start guessing the price!
+				</p>
 			</div>
 
 			<motion.div

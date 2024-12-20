@@ -20,9 +20,9 @@ export const ProductCard = ({ title, image, source, priceInfo, price }: Props) =
 					<h2 className='text-xl mb-2 font-semibold'>{title}</h2>
 
 					<h3 className='text-md font-medium'>Source</h3>
-					<p className='text-sm'>{source}</p>
+					<p className='text-sm dark:text-zinc-200'>{source}</p>
 					<h3 className='mt-2 text-md font-medium'>Price information</h3>
-					<p className='text-sm'>{priceInfo}</p>
+					<p className='text-sm dark:text-zinc-200'>{priceInfo}</p>
 
 					{price && (
 						<>

@@ -26,10 +26,10 @@ export const ResultCard = ({ points, originalPrice, guessedPrice, onContinue, on
 			<CardContent className='text-center'>
 				<h2 className={`text-3xl font-bold ${resultColor}`}>+{points}/100 Points</h2>
 				<div className='mt-3'>
-					<p className=' text-zinc-800'>
+					<p className='dark:text-zinc-300 text-zinc-800'>
 						Your price: <span className='font-semibold'>{guessedPrice}€</span>
 					</p>
-					<p className=' text-zinc-800'>
+					<p className='dark:text-zinc-300 text-zinc-800'>
 						Original price: <span className='font-semibold'>{originalPrice}€</span>
 					</p>
 				</div>

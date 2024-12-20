@@ -30,10 +30,10 @@ export const ProductCard = ({
 					<h3>Product name</h3>
 					<p className='break-words text-wrap whitespace-normal'>{name}</p>
 
-					<h3>Source</h3>
+					<h3 className='font-medium'>Source</h3>
 					<p>{source}</p>
 
-					<h3>Price message</h3>
+					<h3 className='font-medium'>Price message</h3>
 					<p>{priceMessage}</p>
 					{showingResult && (
 						<>

@@ -31,7 +31,7 @@ export const ResultsCard = ({ guesses, onContinue }: Props) => {
 
 				<CardContent className='text-center'>
 					<h1 className='text-6xl font-bold'>{guesses}</h1>
-					<p className='text-zinc-700'>Guesses</p>
+					<p className='text-zinc-700 dark:text-zinc-400'>Guesses</p>
 				</CardContent>
 				<CardFooter className='flex flex-row gap-2'>
 					<Link to='/'>
