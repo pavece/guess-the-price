@@ -1,12 +1,15 @@
 import { Footer } from '@/components/ui/footer';
 import { Navbar } from '@/components/ui/navbar';
 import { Toaster } from '@/components/ui/sonner';
+import { useTheme } from '@/context/theme-provider';
 import { Outlet } from 'react-router-dom';
 
 export const MainLayout = () => {
+	const { theme } = useTheme();
+
 	return (
 		<>
-			<Toaster position='top-right' richColors closeButton theme='light' toastOptions={{}} />
+			<Toaster position='top-right' richColors closeButton theme={theme} toastOptions={{}} />
 
 			<div className='dark:hidden fixed inset-0 top-0 right-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]'></div>
 

@@ -35,7 +35,9 @@ const itemVariant = {
 export const RoundResultsCard = ({ results, playerName, isHost, onNextRound, onEndSession }: Props) => {
 	return (
 		<>
-			{results[0].playerName == playerName && results[0].points > 60 && <Fireworks autorun={{ speed: 0.2 }} />}
+			{results.length > 0 && results[0].playerName == playerName && results[0].points > 60 && (
+				<Fireworks autorun={{ speed: 0.2 }} />
+			)}
 			<Card>
 				<CardHeader>
 					<CardTitle>Round results</CardTitle>
@@ -47,7 +49,7 @@ export const RoundResultsCard = ({ results, playerName, isHost, onNextRound, onE
 						{results.map((result, i) => (
 							<motion.div
 								variants={itemVariant}
-								className='flex justify-between items-center p-4 rounded-md border'
+								className='flex justify-between items-center p-4 rounded-md border dark:border-zinc-800'
 								key={result.playerName}
 							>
 								<div className='flex gap-2 items-center justify-start'>
@@ -57,11 +59,13 @@ export const RoundResultsCard = ({ results, playerName, isHost, onNextRound, onE
 									</h3>
 								</div>
 								<div>
-									<p className='text-neutral-600'>
-										Guessed price: <span className='text-neutral-900 font-semibold'>{result.guessedPrice}$</span>
+									<p className='text-zinc-600 dark:text-zinc-400'>
+										Guessed price:{' '}
+										<span className='text-neutral-900 dark:text-zinc-100 font-semibold'>{result.guessedPrice}$</span>
 									</p>
-									<p className='text-neutral-600'>
-										Points: <span className='text-neutral-900 font-semibold'>{result.points}/100</span>
+									<p className='text-zinc-600 dark:text-zinc-400'>
+										Points:{' '}
+										<span className='text-neutral-900 dark:text-zinc-100 font-semibold'>{result.points}/100</span>
 									</p>
 								</div>
 							</motion.div>

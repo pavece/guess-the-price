@@ -54,7 +54,7 @@ export const MultiplayerPage = () => {
 			<div className='mb-10 flex justify-between items-end'>
 				<div>
 					<h1 className='font-semibold text-3xl'>Multiplayer</h1>
-					<p className='text-zinc-800'>Play the classic mode with your friends.</p>
+					<p className='text-zinc-600 dark:text-zinc-400'>Play the classic mode with your friends.</p>
 				</div>
 
 				<div>
@@ -106,7 +106,7 @@ export const MultiplayerPage = () => {
 
 									<div className='flex-1'>
 										<GuessCard onGuess={guessPrice} />
-										<div className='p-4 bg-white border rounded-md mt-4 w-full'>
+										<div className='p-4 bg-white border dark:bg-transparent dark:border-zinc-800 rounded-md mt-4 w-full'>
 											<RoundTimer />
 										</div>
 									</div>

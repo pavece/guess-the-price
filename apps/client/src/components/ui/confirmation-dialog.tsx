@@ -26,7 +26,7 @@ export const DestructiveActionButton = ({ title, description, children, onConfir
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>{title}</DialogTitle>
+					<DialogTitle className='dark:text-white'>{title}</DialogTitle>
 					<DialogDescription>{description}</DialogDescription>
 				</DialogHeader>
 				<DialogFooter>

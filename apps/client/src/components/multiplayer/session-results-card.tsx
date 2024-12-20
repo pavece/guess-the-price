@@ -58,14 +58,17 @@ export const SessionResultsCard = ({ results, roundsPlayed, isHost, onTerminateS
 									</h3>
 								</div>
 								<div className='text-start'>
-									<p className='text-neutral-600'>
+									<p className='text-zinc-600 dark:text-zinc-400'>
 										Total points:
-										<span className='ml-1 text-neutral-900 font-semibold'>
+										<span className='ml-1 text-neutral-900 font-semibold dark:text-zinc-100'>
 											{result.points}/{100 * roundsPlayed}
 										</span>
 									</p>
-									<p className='text-neutral-600'>
-										Best guess: <span className='ml-1 text-neutral-900 font-semibold'>{result.bestGuess}/100</span>
+									<p className='text-zinc-600 dark:text-zinc-400'>
+										Best guess:{' '}
+										<span className='ml-1 text-neutral-900 font-semibold dark:text-zinc-100'>
+											{result.bestGuess}/100
+										</span>
 									</p>
 								</div>
 							</motion.div>
@@ -86,7 +89,7 @@ export const SessionResultsCard = ({ results, roundsPlayed, isHost, onTerminateS
 								<GameController size={24} /> Play again
 							</Button>
 						</div>
-						<p className='text-sm text-neutral-600'>
+						<p className='text-sm text-neutral-600 dark:text-neutral-400'>
 							*You are the host of this session, you can restart the session and continue playing with the same players.
 							Or you can terminate the session to stop playing.
 						</p>

@@ -42,7 +42,7 @@ export const ShareSessionCard = ({ isHost, sessionId, playerNumber, playerName, 
 					<CardContent>
 						<div className='flex items-center justify-center flex-col mb-5'>
 							<h1 className='text-2xl'>{playerNumber ?? 1}</h1>
-							<p className='text-neutral-800'>Players in session</p>
+							<p className='text-neutral-800 dark:text-zinc-400'>Players in session</p>
 						</div>
 
 						<p className='text-md'>Share this link:</p>
@@ -52,11 +52,11 @@ export const ShareSessionCard = ({ isHost, sessionId, playerNumber, playerName, 
 						</Button>
 					</CardContent>
 					{isHost && (
-						<CardFooter className='border-t-[1px] pt-4 flex-col'>
+						<CardFooter className='border-t-[1px] dark:border-zinc-800 pt-4 flex-col'>
 							<Button className='w-full' onClick={onStart}>
 								<Joystick size={24} /> Play
 							</Button>
-							<p className='text-sm text-neutral-600 mt-1'>
+							<p className='text-sm text-neutral-600 dark:text-zinc-400 mt-1'>
 								* You are the host of the session. Click play whenever you want to start the session. Players can still
 								join once the session has stared.
 							</p>

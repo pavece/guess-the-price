@@ -28,7 +28,7 @@ export const MultiplayerJoinPage = () => {
 		<div>
 			<div className='mb-10'>
 				<h1 className='font-semibold text-3xl'>Multiplayer</h1>
-				<p className='text-zinc-800'>Create or join a session to start playing with your friends.</p>
+				<p className='text-zinc-600 dark:text-zinc-400'>Create or join a session to start playing with your friends.</p>
 			</div>
 			<div className='flex gap-4 flex-col md:flex-row'>
 				<Card className='w-full h-fit'>
