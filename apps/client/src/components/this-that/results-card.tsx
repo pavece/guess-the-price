@@ -40,7 +40,7 @@ export const ResultsCard = ({ guesses, onContinue }: Props) => {
 						</Button>
 					</Link>
 
-					<Button className='w-full min-w-[240px]' onClick={onContinue}>
+					<Button className='w-full md:min-w-[240px]' onClick={onContinue}>
 						<Joystick size={24} /> Play again
 					</Button>
 				</CardFooter>
