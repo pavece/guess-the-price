@@ -19,7 +19,7 @@ export const GameModeCard = ({ title, description, imageSrc, link, disabled = fa
 				<CardDescription>{description}</CardDescription>
 			</CardHeader>
 			<CardContent className='flex items-center justify-center'>
-				<img src={imageSrc} alt={title + ' image'} className='min-w-[350px] w-[400px] aspect-video' />
+				<img src={imageSrc} alt={title + ' image'} className='md:min-w-[350px] w-[400px] aspect-video' />
 			</CardContent>
 			<CardFooter>
 				<Button

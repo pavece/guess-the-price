@@ -45,8 +45,8 @@ export const ShareSessionCard = ({ isHost, sessionId, playerNumber, playerName, 
 							<p className='text-neutral-800 dark:text-zinc-400'>Players in session</p>
 						</div>
 
-						<p className='text-md'>Share this link:</p>
-						<p className='font-sm font-medium'>http://localhost:5173/multiplayer/{sessionId}</p>
+						<p className='hidden md:block text-md'>Share this link:</p>
+						<p className='hidden md:block font-sm font-medium'>http://localhost:5173/multiplayer/{sessionId}</p>
 						<Button className='mt-2 w-full' onClick={onCopyLink}>
 							<Copy size={24} /> Copy session link
 						</Button>

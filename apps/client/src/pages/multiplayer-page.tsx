@@ -51,7 +51,7 @@ export const MultiplayerPage = () => {
 
 	return (
 		<div>
-			<div className='mb-10 flex justify-between items-end'>
+			<div className='mb-10 flex justify-between items-start md:items-end'>
 				<div>
 					<h1 className='font-semibold text-3xl'>Multiplayer</h1>
 					<p className='text-zinc-600 dark:text-zinc-400'>Play the classic mode with your friends.</p>
@@ -63,7 +63,7 @@ export const MultiplayerPage = () => {
 						description='Once you leave the session you cannot rejoin with the same name. Meaning that if you rejoin you will appear as a new person and will loose track of your guesses.'
 						onConfirm={leaveSession}
 					>
-						<SignOut size={24} /> Leave session
+						<SignOut size={24} /> <span className='hidden md:block'>Leave session</span>
 					</DestructiveActionButton>
 				</div>
 			</div>
@@ -95,7 +95,7 @@ export const MultiplayerPage = () => {
 									animate={{ opacity: 1 }}
 									exit={{ opacity: 0 }}
 									transition={{ duration: 0.5 }}
-									className='flex gap-6'
+									className='flex gap-6 flex-col md:flex-row'
 								>
 									<ProductCard
 										image={mpVolatileStore.roundData.product?.image}
@@ -104,7 +104,7 @@ export const MultiplayerPage = () => {
 										title={mpVolatileStore.roundData.product?.name}
 									/>
 
-									<div className='flex-1'>
+									<div className='md:flex-1'>
 										<GuessCard onGuess={guessPrice} />
 										<div className='p-4 bg-white border dark:bg-transparent dark:border-zinc-800 rounded-md mt-4 w-full'>
 											<RoundTimer />
@@ -132,7 +132,7 @@ export const MultiplayerPage = () => {
 									animate={{ opacity: 1 }}
 									exit={{ opacity: 0 }}
 									transition={{ duration: 0.5 }}
-									className='flex gap-6'
+									className='flex gap-6 flex-col md:flex-row'
 								>
 									<ProductCard
 										image={mpVolatileStore.roundData.product?.image ?? ''}
@@ -141,7 +141,7 @@ export const MultiplayerPage = () => {
 										title={mpVolatileStore.roundData.product?.name ?? ''}
 										price={mpVolatileStore.roundData.product?.price ?? 0}
 									/>
-									<div className='flex-1'>
+									<div className='md:flex-1'>
 										<RoundResultsCard
 											isHost={mpStore.isHost}
 											results={mpVolatileStore.roundData.results ?? []}

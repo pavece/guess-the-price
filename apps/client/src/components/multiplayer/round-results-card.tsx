@@ -52,21 +52,23 @@ export const RoundResultsCard = ({ results, playerName, isHost, onNextRound, onE
 								className='flex justify-between items-center p-4 rounded-md border dark:border-zinc-800'
 								key={result.playerName}
 							>
-								<div className='flex gap-2 items-center justify-start'>
-									<h3 className='text-lg font-semibold'>#{i + 1}</h3>
-									<h3 className='font-medium'>
-										{result.playerName} {playerName == result.playerName && '(You)'}
-									</h3>
-								</div>
-								<div>
-									<p className='text-zinc-600 dark:text-zinc-400'>
-										Guessed price:{' '}
-										<span className='text-neutral-900 dark:text-zinc-100 font-semibold'>{result.guessedPrice}$</span>
-									</p>
-									<p className='text-zinc-600 dark:text-zinc-400'>
-										Points:{' '}
-										<span className='text-neutral-900 dark:text-zinc-100 font-semibold'>{result.points}/100</span>
-									</p>
+								<div className='flex flex-col md:flex-row gap-2 items-start justify-start'>
+									<div className='flex gap-2 items-center justify-start'>
+										<h3 className='text-lg font-semibold'>#{i + 1}</h3>
+										<h3 className='font-medium'>
+											{result.playerName} {playerName == result.playerName && '(You)'}
+										</h3>
+									</div>
+									<div>
+										<p className='text-zinc-600 dark:text-zinc-400'>
+											Guessed price:{' '}
+											<span className='text-neutral-900 dark:text-zinc-100 font-semibold'>{result.guessedPrice}$</span>
+										</p>
+										<p className='text-zinc-600 dark:text-zinc-400'>
+											Points:{' '}
+											<span className='text-neutral-900 dark:text-zinc-100 font-semibold'>{result.points}/100</span>
+										</p>
+									</div>
 								</div>
 							</motion.div>
 						))}

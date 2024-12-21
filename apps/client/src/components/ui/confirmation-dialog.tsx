@@ -26,10 +26,10 @@ export const DestructiveActionButton = ({ title, description, children, onConfir
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle className='dark:text-white'>{title}</DialogTitle>
-					<DialogDescription>{description}</DialogDescription>
+					<DialogTitle className='text-start dark:text-white'>{title}</DialogTitle>
+					<DialogDescription className='text-start'>{description}</DialogDescription>
 				</DialogHeader>
-				<DialogFooter>
+				<DialogFooter className='flex gap-2'>
 					<DialogClose asChild>
 						<Button>Cancel</Button>
 					</DialogClose>

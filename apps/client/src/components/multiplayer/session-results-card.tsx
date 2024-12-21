@@ -37,7 +37,7 @@ export const SessionResultsCard = ({ results, roundsPlayed, isHost, onTerminateS
 
 	return (
 		<>
-			{results[0].playerName == playerName && <Fireworks autorun={{ speed: 0.2 }} />}
+			{results.length > 0 && results[0].playerName == playerName && <Fireworks autorun={{ speed: 0.2 }} />}
 			<Card>
 				<CardHeader>
 					<CardTitle>Session results</CardTitle>
@@ -48,28 +48,30 @@ export const SessionResultsCard = ({ results, roundsPlayed, isHost, onTerminateS
 						{results.map((result, i) => (
 							<motion.div
 								variants={itemVariant}
-								className='flex justify-between items-center p-4 rounded-md border'
+								className='flex justify-between items-center p-4 rounded-md border dark:border-zinc-800'
 								key={result.playerName}
 							>
-								<div className='flex gap-2 items-center justify-start'>
-									<h3 className='text-lg font-semibold'>#{i + 1}</h3>
-									<h3 className='font-medium'>
-										{result.playerName} {playerName == result.playerName && '(You)'}
-									</h3>
-								</div>
-								<div className='text-start'>
-									<p className='text-zinc-600 dark:text-zinc-400'>
-										Total points:
-										<span className='ml-1 text-neutral-900 font-semibold dark:text-zinc-100'>
-											{result.points}/{100 * roundsPlayed}
-										</span>
-									</p>
-									<p className='text-zinc-600 dark:text-zinc-400'>
-										Best guess:{' '}
-										<span className='ml-1 text-neutral-900 font-semibold dark:text-zinc-100'>
-											{result.bestGuess}/100
-										</span>
-									</p>
+								<div className='flex flex-col md:flex-row gap-2 items-start justify-start'>
+									<div className='flex gap-2 items-center justify-start'>
+										<h3 className='text-lg font-semibold'>#{i + 1}</h3>
+										<h3 className='font-medium'>
+											{result.playerName} {playerName == result.playerName && '(You)'}
+										</h3>
+									</div>
+									<div className='text-start'>
+										<p className='text-zinc-600 dark:text-zinc-400'>
+											Total points:
+											<span className='ml-1 text-neutral-900 font-semibold dark:text-zinc-100'>
+												{result.points}/{100 * roundsPlayed}
+											</span>
+										</p>
+										<p className='text-zinc-600 dark:text-zinc-400'>
+											Best guess:{' '}
+											<span className='ml-1 text-neutral-900 font-semibold dark:text-zinc-100'>
+												{result.bestGuess}/100
+											</span>
+										</p>
+									</div>
 								</div>
 							</motion.div>
 						))}
@@ -77,7 +79,7 @@ export const SessionResultsCard = ({ results, roundsPlayed, isHost, onTerminateS
 				</CardContent>
 				{isHost && (
 					<CardFooter className='flex-col items-start gap-2'>
-						<div className='flex flex-row gap-4 w-full'>
+						<div className='flex md:flex-row flex-col md:gap-4 gap-2 w-full'>
 							<DestructiveActionButton
 								title='Are you sure?'
 								description='If you terminate this session you will need to create a new one and invite everyone again to continue playing.'

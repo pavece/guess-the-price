@@ -14,7 +14,7 @@ export const ProductCard = ({ title, image, source, priceInfo, price }: Props) =
 	return (
 		<Card className='w-full md:w-[60%] pt-6 '>
 			<CardContent className='flex lg:flex-row flex-col gap-4'>
-				<Image src={image} alt='Product image' className='min-w-[400px]' />
+				<Image src={image} alt='Product image' className='md:min-w-[400px]' />
 
 				<div>
 					<h2 className='text-xl mb-2 font-semibold'>{title}</h2>

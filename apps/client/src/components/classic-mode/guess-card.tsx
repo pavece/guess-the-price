@@ -16,10 +16,12 @@ export const GuessCard = ({ onGuess }: Props) => {
 	};
 
 	return (
-		<Card className='max-h-fit min-w-[350px] flex-1'>
+		<Card className='max-h-fit md:min-w-[350px] flex-1'>
 			<CardHeader>
 				<CardTitle>Your guess</CardTitle>
-				<CardDescription>Make sure to check price information and then choose the price.</CardDescription>
+				<CardDescription className='word-break'>
+					Make sure to check price information and then choose the price.
+				</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<form className='space-y-4' onSubmit={guessPrice}>
