@@ -14,7 +14,7 @@ export const Footer = () => {
 					Prices and products are for entertainment only; we are not affiliated with any company.
 				</p>
 
-				<Link to='/' className='flex gap-2 underline'>
+				<Link to='https://github.com/pavece/guess-the-price' className='flex gap-2 underline'>
 					<GithubLogo size={24} /> Source code
 				</Link>
 			</div>

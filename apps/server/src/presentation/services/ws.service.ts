@@ -2,13 +2,14 @@ import { Server as HttpServer } from 'http';
 import { Server as SocketIoServer } from 'socket.io';
 import { gameSessionSocketHandler } from '../multiplayer/session.handlers';
 import { sessionRoundsSocketHandlers } from '../multiplayer/round.handlers';
+import 'dotenv/config';
 
 export class WSService {
 	private static _instance: WSService;
 	private socketIoServer: SocketIoServer;
 
 	constructor(httpServer: HttpServer) {
-		this.socketIoServer = new SocketIoServer(httpServer, { cors: { origin: '*' } }); //TODO: update to prod
+		this.socketIoServer = new SocketIoServer(httpServer, { cors: { origin: process.env.CORS_ORIGIN ?? '*' } });
 		this.start();
 	}
 
