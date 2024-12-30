@@ -52,14 +52,17 @@ export const MainPage = () => {
 						link='/this-that'
 					/>
 				</motion.div>
-				<motion.div variants={itemVariant}>
-					<GameModeCard
-						title='Multiplayer mode'
-						description='Play the classic mode with your friends.'
-						imageSrc={`/images/${theme == 'dark' ? 'd-' : ''}multiplayer-mode-image.svg`}
-						link='/multiplayer'
-					/>
-				</motion.div>
+				{import.meta.env.VITE_SHOW_GITHUB_LINK == 'true' && (
+					<motion.div variants={itemVariant}>
+						<GameModeCard
+							disabled
+							title='Multiplayer mode'
+							description='Play the classic mode with your friends.'
+							imageSrc={`/images/${theme == 'dark' ? 'd-' : ''}multiplayer-mode-image.svg`}
+							link='https://github.com/pavece/guess-the-price'
+						/>
+					</motion.div>
+				)}
 			</motion.div>
 		</div>
 	);
