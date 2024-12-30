@@ -57,7 +57,7 @@ export const MainPage = () => {
 						<GameModeCard
 							disabled
 							title='Multiplayer mode'
-							description='Play the classic mode with your friends.'
+							description='Check the github repo for more information.'
 							imageSrc={`/images/${theme == 'dark' ? 'd-' : ''}multiplayer-mode-image.svg`}
 							link='https://github.com/pavece/guess-the-price'
 						/>
