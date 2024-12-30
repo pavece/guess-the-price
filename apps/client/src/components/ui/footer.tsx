@@ -14,9 +14,11 @@ export const Footer = () => {
 					Prices and products are for entertainment only; we are not affiliated with any company.
 				</p>
 
-				<Link to='https://github.com/pavece/guess-the-price' className='flex gap-2 underline'>
-					<GithubLogo size={24} /> Source code
-				</Link>
+				{import.meta.env.VITE_SHOW_GITHUB_LINK === 'true' && (
+					<Link to='https://github.com/pavece/guess-the-price' className='flex gap-2 underline'>
+						<GithubLogo size={24} /> Source code
+					</Link>
+				)}
 			</div>
 		</footer>
 	);
