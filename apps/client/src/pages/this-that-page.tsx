@@ -1,9 +1,9 @@
 import { ProductCard } from '@/components/this-that/product-card';
 import { ResultsCard } from '@/components/this-that/results-card';
-import { Loading } from '@/components/ui/loading';
 import { RandomProduct } from '@/interfaces/product.interface';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useAnimate } from 'framer-motion';
+import { ProductCardSkeleton } from '@/components/this-that/product-card-skeleton';
 
 const getProducts = async (current?: string) => {
 	return fetch(import.meta.env.VITE_API_URL + `/random/product/highLow`, {
@@ -95,7 +95,16 @@ export const ThisOrThatPage = () => {
 			</div>
 			<AnimatePresence>
 				{!products ? (
-					<Loading />
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={{ duration: 1 }}
+						className='flex flex-col md:flex-row gap-4 items-center'
+					>
+						<ProductCardSkeleton />
+						<ProductCardSkeleton />
+					</motion.div>
 				) : (
 					<motion.div
 						initial={{ opacity: 0 }}
