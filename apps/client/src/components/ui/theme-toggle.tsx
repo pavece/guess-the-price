@@ -6,7 +6,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useTheme } from '@/context/theme-provider';
-import { Moon, Sun } from '@phosphor-icons/react';
+import { Desktop, Moon, Sun } from '@phosphor-icons/react';
 
 export function ThemeToggle() {
 	const { setTheme } = useTheme();
@@ -21,9 +21,15 @@ export function ThemeToggle() {
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align='end'>
-				<DropdownMenuItem onClick={() => setTheme('light')}>Light</DropdownMenuItem>
-				<DropdownMenuItem onClick={() => setTheme('dark')}>Dark</DropdownMenuItem>
-				<DropdownMenuItem onClick={() => setTheme('system')}>System</DropdownMenuItem>
+				<DropdownMenuItem onClick={() => setTheme('light')}>
+					<Sun /> Light
+				</DropdownMenuItem>
+				<DropdownMenuItem onClick={() => setTheme('dark')}>
+					<Moon /> Dark
+				</DropdownMenuItem>
+				<DropdownMenuItem onClick={() => setTheme('system')}>
+					<Desktop /> System
+				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
