@@ -104,7 +104,11 @@ You can now visit the site, check the frontend url that is shown in the client a
 
 ## Build using docker
 
-This prject contains docker images for both client and server apps. In the root of the project you can find a compose file that will build + run this images with the database.
+1. Setup env variables as indicated in the development setup part
+
+   Important: frontend variables are loaded from the .env file, backend variables can be changed in the compose file
+
+2. Run docker compose
 
 ```bash
 docker compose up -d
