@@ -51,11 +51,18 @@ You can run both apps separatedly (recommended for development) or using one sin
     docker compose up -d
    ```
 
-5. Run the prisma migration
+5. Run the prisma migration and generate client
+
+   (This should be performed once you set up the databse)
 
    ```bash
    cd /apps/server
    npx prisma migrate dev --name "Initial migration"
+   ```
+
+   ```bash
+   cd /apps/server
+   npx prisma generate
    ```
 
 6. Execute seed procedure and/or add custom products
@@ -94,6 +101,17 @@ You can run both apps separatedly (recommended for development) or using one sin
 8. Visit the site
 
 You can now visit the site, check the frontend url that is shown in the client app logs.
+
+## Build using docker
+
+This prject contains docker images for both client and server apps. In the root of the project you can find a compose file that will build + run this images with the database.
+
+```bash
+docker compose up -d
+```
+
+> [!CAUTION]
+> The compose file includes a databse setup script that will generate the migration and seed the database. Once you run this compose the first time comment that part.\*\*
 
 ## Hosting recommendations
 
