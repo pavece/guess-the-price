@@ -20,7 +20,7 @@ services:
     image: backend
     environment:
       PORT: 3000
-      API_KEY: 'AjRBkVtb5oJqhQnQg1yYVY23n/TMuvHjcGgSyotFg='
+      API_KEY: 'RANDOMLY GENERATED API KEY TO PROTECT ADMIN ENDPOINTS'
       DATABASE_URL: 'postgresql://root:root@pg-database:5432/guess-the-price?schema=public'
       MP_SESSION_INACTIVE_SECONDS: 180
       MP_SESSION_ROUND_DURATION_SECONDS: 30
