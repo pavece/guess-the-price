@@ -42,6 +42,8 @@ services:
       - backend
     restart: 'no'
     command: ['sh', '-c', 'npx prisma migrate deploy && npm run seed']
+    environment:
+      DATABASE_URL: 'postgresql://root:root@pg-database:5432/guess-the-price?schema=public'
     networks:
       - backend
   # COMMENT IF SEED HAS BEEN EXECUTED
