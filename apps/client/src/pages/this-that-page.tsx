@@ -94,7 +94,7 @@ export const ThisOrThatPage = () => {
 				<p className='text-zinc-600 dark:text-zinc-400'>Get two products and guess which one is more expensive.</p>
 			</div>
 			<AnimatePresence>
-				{!products ? (
+				{!products?.newProduct.name || !products.selectedProduct.name ? (
 					<motion.div
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}
