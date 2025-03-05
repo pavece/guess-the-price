@@ -12,7 +12,7 @@ Test your shopping knowledge in this entertaining price guessing game! Challenge
 
 ## Live site
 
-Live site: [http://example.com](http://example.com)
+Live site: [https://guesstheprice.pavece.com/](https://guesstheprice.pavece.com/)
 
 ## Development setup
 
@@ -21,77 +21,77 @@ You can run both apps separately (recommended for development) or using one sing
 
 1. Clone the repository
 
-    ```bash
-     git clone -b single-player-only https://github.com/pavece/guess-the-price.git
-    ```
+   ```bash
+    git clone -b single-player-only https://github.com/pavece/guess-the-price.git
+   ```
 
 2. Install dependencies
 
-    ```bash
-     npm i
-    ```
+   ```bash
+    npm i
+   ```
 
 3. Setup environment variables
 
-    Rename /apps/client/.env.template to .env.local
-    Update the variables with your desired configuration. The default variables included in the template should work if you don't change the backend port :)
+   Rename /apps/client/.env.template to .env.local
+   Update the variables with your desired configuration. The default variables included in the template should work if you don't change the backend port :)
 
-    Rename /apps/server/.env.template to .env
-    Generate a random string to use as API_KEY for the admin apis. You will need to provide this key when adding/removing products or categories using the API.
-    Make sure to place the correct database url. The default variables should work if you are following along.
+   Rename /apps/server/.env.template to .env
+   Generate a random string to use as API_KEY for the admin apis. You will need to provide this key when adding/removing products or categories using the API.
+   Make sure to place the correct database url. The default variables should work if you are following along.
 
 4. Start the local database
 
-    This step is optional, I provided a docker compose file with the setup to run a local PostgreSQL instance. If you have other instance running feel free to use it. Just remember to configure the DATABASE_URL variable in /apps/server/.env
+   This step is optional, I provided a docker compose file with the setup to run a local PostgreSQL instance. If you have other instance running feel free to use it. Just remember to configure the DATABASE_URL variable in /apps/server/.env
 
-    ```bash
-     cd /apps/server
-     docker compose up -d
-    ```
+   ```bash
+    cd /apps/server
+    docker compose up -d
+   ```
 
 5. Run the prisma migration
 
-    ```bash
-    cd /apps/server
-    npx prisma migrate dev --name "Initial migration"
-    ```
+   ```bash
+   cd /apps/server
+   npx prisma migrate dev --name "Initial migration"
+   ```
 
-    ```bash
-    npx prisma generate
-    ```
+   ```bash
+   npx prisma generate
+   ```
 
 6. Execute seed procedure and/or add custom products
 
-    ```bash
-     cd /apps/server
-     npm run seed
-    ```
+   ```bash
+    cd /apps/server
+    npm run seed
+   ```
 
-    You can add new products and categories manually using a tool like PG admin.
-    Or use the included api to create products and categories
+   You can add new products and categories manually using a tool like PG admin.
+   Or use the included api to create products and categories
 
-    ```txt
-    Add categories --> POST localhost:3000/api/category/new?apiKey=YOUR API KEY
-    Add products --> POST localhost:3000/api/product/new?apiKey=YOUR API KEY
-    ```
+   ```txt
+   Add categories --> POST localhost:3000/api/category/new?apiKey=YOUR API KEY
+   Add products --> POST localhost:3000/api/product/new?apiKey=YOUR API KEY
+   ```
 
-    Providing product or category information like this:
+   Providing product or category information like this:
 
-    ```json
-    "product": {
-        "name": "Test",
-        "image": "http://example.com",
-        "price": 10
-    }
-    ```
+   ```json
+   "product": {
+       "name": "Test",
+       "image": "http://example.com",
+       "price": 10
+   }
+   ```
 
-    Check the endpoint implementation for more details.
+   Check the endpoint implementation for more details.
 
 7. Run the project
 
-    ```bash
-    npm run dev
-    ```
+   ```bash
+   npm run dev
+   ```
 
 8. Visit the site
 
