@@ -14,7 +14,7 @@ Test your shopping knowledge in this entertaining price guessing game! Challenge
 ## Live site
 
 The demo for this project only contains single player modes, you can get that branch of the code [here](https://github.com/pavece/guess-the-price/tree/single-player-only).
-Live site: [http://example.com](http://example.com)
+Live site: [https://guesstheprice.pavece.com/](https://guesstheprice.pavece.com/)
 
 ## Development setup
 
