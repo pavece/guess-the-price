@@ -17,12 +17,12 @@ Live site: [http://example.com](http://example.com)
 ## Development setup
 
 This is a monorepo built using Turborepo. You can find both the client and server apps in the **/apps** directory.
-You can run both apps separatedly (recommended for development) or using one single command from the root of the monorepo.
+You can run both apps separately (recommended for development) or using one single command from the root of the monorepo.
 
 1. Clone the repository
 
     ```bash
-     git clone https://github.com/pavece/guess-the-price.git
+     git clone -b single-player-only https://github.com/pavece/guess-the-price.git
     ```
 
 2. Install dependencies
@@ -71,7 +71,7 @@ You can run both apps separatedly (recommended for development) or using one sin
     Or use the included api to create products and categories
 
     ```txt
-    Add categories --> POST localhost:3000/api/categoty/new?apiKey=YOUR API KEY
+    Add categories --> POST localhost:3000/api/category/new?apiKey=YOUR API KEY
     Add products --> POST localhost:3000/api/product/new?apiKey=YOUR API KEY
     ```
 
@@ -99,7 +99,7 @@ You can now visit the site, check the frontend url that is shown in the client a
 
 ## Build using docker
 
-This prject contains docker images for both client and server apps. In the root of the project you can find a compose file that will build + run this images with the database.
+This project contains docker images for both client and server apps. In the root of the project you can find a compose file that will build + run this images with the database.
 
 1. Setup env variables as indicated in the development setup part
 
@@ -112,7 +112,7 @@ docker compose up -d
 ```
 
 > [!CAUTION]
-> The compose file includes a databse setup script that will generate the migration and seed the database. Once you run this compose the first time comment that part.
+> The compose file includes a database setup script that will generate the migration and seed the database. Once you run this compose the first time comment that part.
 
 ## Hosting recommendations
 
